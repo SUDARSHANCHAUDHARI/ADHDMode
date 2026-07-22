@@ -9,6 +9,7 @@ import {
   parseMode,
   releaseNotesPath,
   releaseTitle,
+  remoteTagTarget,
   tagForVersion,
 } from '../scripts/release.mjs';
 
@@ -30,6 +31,7 @@ test('release helper rejects ambiguous or unknown modes', () => {
 test('release metadata is derived from package version', () => {
   assert.equal(tagForVersion('0.1.0'), 'v0.1.0');
   assert.equal(tagForVersion('1.2.3-rc.1'), 'v1.2.3-rc.1');
+  assert.equal(tagForVersion('1.2.3+build.4'), 'v1.2.3+build.4');
   assert.equal(releaseNotesPath('0.1.0'), 'docs/release-notes-v0.1.0.md');
   assert.equal(releaseTitle('0.1.0'), 'ADHDMode v0.1.0');
   assert.throws(() => tagForVersion('version-one'), /Invalid package version/);
@@ -45,6 +47,21 @@ test('repository visibility comparison is case-insensitive', () => {
   assert.equal(normalizeVisibility('public'), 'PUBLIC');
   assert.equal(normalizeVisibility(' PUBLIC '), 'PUBLIC');
   assert.equal(normalizeVisibility(undefined), '');
+});
+
+test('remote annotated tags resolve to the peeled commit', () => {
+  const output = [
+    'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\trefs/tags/v0.1.0',
+    'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\trefs/tags/v0.1.0^{}',
+  ].join('\n');
+
+  assert.equal(remoteTagTarget(output, 'v0.1.0'), 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb');
+});
+
+test('remote lightweight tags resolve directly', () => {
+  const output = 'cccccccccccccccccccccccccccccccccccccccc\trefs/tags/v0.1.0';
+  assert.equal(remoteTagTarget(output, 'v0.1.0'), 'cccccccccccccccccccccccccccccccccccccccc');
+  assert.equal(remoteTagTarget('', 'v0.1.0'), null);
 });
 
 test('help can run without GitHub CLI or repository mutations', () => {
