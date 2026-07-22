@@ -51,6 +51,25 @@ test('documented commands use current agent identifiers', () => {
   assert.match(install, /\.cursor\/skills\/adhd-mode\//);
 });
 
+test('README keeps public project and author information', () => {
+  const readme = read('README.md');
+
+  for (const heading of [
+    '## Why ADHDMode',
+    '## Key features',
+    '## Supported agents',
+    '## Installation',
+    '## Safety and scope',
+    '## Author',
+  ]) {
+    assert.match(readme, new RegExp(heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  }
+
+  assert.match(readme, /Sudarshan Kishor Chaudhari/);
+  assert.match(readme, /https:\/\/github\.com\/SUDARSHANCHAUDHARI/);
+  assert.match(readme, /Creator and maintainer of ADHDMode/);
+});
+
 test('canonical skill can be copied into supported project skill locations', () => {
   const source = path.join(root, 'skills/adhd-mode');
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'adhd-mode-install-'));
