@@ -27,9 +27,13 @@ const requiredFiles = [
   'lib/config.mjs',
   'lib/paths.mjs',
   'docs/install.md',
+  'docs/public-release.md',
+  'docs/release-checklist.md',
   'docs/release-notes-v0.1.0.md',
   'evals/cases.jsonl',
+  'scripts/release.mjs',
   'tests/install-contracts.test.mjs',
+  'tests/release.test.mjs',
   '.github/workflows/validate.yml',
 ];
 
@@ -74,6 +78,12 @@ if (pkg) {
   if (pkg.private !== true) errors.push('package.json must remain private to prevent accidental npm publication');
   if (pkg.bin?.['adhd-mode'] !== './bin/adhd-mode.mjs') errors.push('CLI bin path is invalid');
   if (pkg.files?.includes('.agents/')) errors.push('Package must not include an unsupported Codex marketplace directory');
+  if (pkg.scripts?.['release:check'] !== 'node scripts/release.mjs --check') {
+    errors.push('package.json release:check command is invalid');
+  }
+  if (pkg.scripts?.['release:publish'] !== 'node scripts/release.mjs --publish') {
+    errors.push('package.json release:publish command is invalid');
+  }
 }
 
 const versioned = [
@@ -147,6 +157,7 @@ if (fs.existsSync(skillPath)) {
 const readText = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const readme = fs.existsSync(path.join(root, 'README.md')) ? readText('README.md') : '';
 const install = fs.existsSync(path.join(root, 'docs/install.md')) ? readText('docs/install.md') : '';
+const publicRelease = fs.existsSync(path.join(root, 'docs/public-release.md')) ? readText('docs/public-release.md') : '';
 for (const [file, text, phrases] of [
   ['README.md', readme, [
     '/adhd-mode:adhd-mode',
@@ -154,6 +165,9 @@ for (const [file, text, phrases] of [
     '$adhd-mode',
     'gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git',
     'pull requests only',
+    'npm run release:check',
+    'npm run release:publish',
+    'docs/public-release.md',
   ]],
   ['docs/install.md', install, [
     'claude plugin validate . --strict',
@@ -164,15 +178,35 @@ for (const [file, text, phrases] of [
     '.github/skills/adhd-mode/',
     '.cursor/skills/adhd-mode/',
   ]],
+  ['docs/public-release.md', publicRelease, [
+    'npm run release:check',
+    'npm run release:publish',
+    'The helper never changes repository visibility.',
+    'There is no `--force` option.',
+    'No GitHub Actions release workflow is used.',
+  ]],
 ]) {
   for (const phrase of phrases) {
-    if (!text.includes(phrase)) errors.push(`${file} is missing installation contract: ${phrase}`);
+    if (!text.includes(phrase)) errors.push(`${file} is missing contract: ${phrase}`);
   }
 }
 if (readme.includes('Then run `/adhd-mode`.')) errors.push('README uses the unnamespaced Claude skill command');
 if (readme.includes('codex plugin marketplace add')) errors.push('README advertises an unsupported Codex marketplace flow');
 if (install.includes('codex plugin marketplace add')) errors.push('Installation guide advertises an unsupported Codex marketplace flow');
 if (readme.includes('pushes to `main`')) errors.push('README incorrectly claims validation runs after merge');
+
+const releaseScript = fs.existsSync(path.join(root, 'scripts/release.mjs')) ? readText('scripts/release.mjs') : '';
+for (const phrase of [
+  "return publish ? 'publish' : 'check'",
+  "run('gh', ['auth', 'status'])",
+  "normalizeVisibility(repository.visibility) !== 'PUBLIC'",
+  "if (branch !== 'main')",
+  "runReleaseGates();",
+  "'--verify-tag'",
+]) {
+  if (!releaseScript.includes(phrase)) errors.push(`Release helper is missing safety contract: ${phrase}`);
+}
+if (releaseScript.includes("'--force'")) errors.push('Release helper must not implement a force option');
 
 const hookPath = path.join(root, 'claude-hooks/session-start.mjs');
 function runHook(configDir, pluginRoot = root) {
