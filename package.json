@@ -1,0 +1,19 @@
+{
+  "name": "adhd-mode",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ADHD-friendly response layer for AI coding agents",
+  "type": "module",
+  "bin": {
+    "adhd-mode": "./bin/adhd-mode.mjs"
+  },
+  "scripts": {
+    "test": "node scripts/validate-repo.mjs && node scripts/validate-cases.mjs",
+    "validate": "node scripts/validate-repo.mjs",
+    "validate:cases": "node scripts/validate-cases.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}
