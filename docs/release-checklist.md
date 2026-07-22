@@ -9,7 +9,8 @@
 - [x] CLI init, validation, mode, profile, status, enable, and disable tests pass.
 - [x] Manifest versions match `package.json`.
 - [x] Claude Code uses the namespaced `/adhd-mode:adhd-mode` command.
-- [x] Codex marketplace metadata points to the repository plugin and canonical skill.
+- [x] Codex uses the canonical Agent Skill through `.agents/skills/adhd-mode/`.
+- [x] No unsupported Codex marketplace entry is published.
 - [x] Gemini extension and direct-skill commands match the current repository layout.
 - [x] Canonical skill copies successfully into supported agent skill locations.
 - [x] No second complete policy copy exists.
