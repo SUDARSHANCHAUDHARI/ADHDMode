@@ -22,12 +22,10 @@ test('agent-specific loading stays isolated', () => {
   assert.equal(fs.existsSync(path.join(root, 'hooks/hooks.json')), false);
 });
 
-test('repository marketplaces point to their supported plugin formats', () => {
+test('only supported marketplace metadata is published', () => {
   const claude = read('.claude-plugin/marketplace.json');
-  const codex = read('.agents/plugins/marketplace.json');
 
   assert.equal(claude.$schema, 'https://json.schemastore.org/claude-code-marketplace.json');
   assert.equal(claude.plugins[0].source, './');
-  assert.equal(codex.interface.displayName, 'ADHDMode');
-  assert.equal(codex.plugins[0].source.url, 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git');
+  assert.equal(fs.existsSync(path.join(root, '.agents/plugins/marketplace.json')), false);
 });
