@@ -57,13 +57,16 @@ Then run the namespaced skill:
 
 ### Codex
 
-Add the repository marketplace:
+Install ADHDMode as a standard Agent Skill by copying `skills/adhd-mode/` into one of these locations:
 
-```bash
-codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
+```text
+$REPO_ROOT/.agents/skills/adhd-mode/
+$HOME/.agents/skills/adhd-mode/
 ```
 
-Install ADHDMode from the Plugins Directory in the ChatGPT desktop app, or copy `skills/adhd-mode/` into `.agents/skills/adhd-mode/` for repository-scoped use. Invoke it with `$adhd-mode`.
+Restart the session, confirm discovery with `/skills`, and invoke it with `$adhd-mode`.
+
+ADHDMode does not currently publish a Codex marketplace because the repository keeps one canonical skill instead of maintaining a second packaged copy under `.agents/plugins/plugins/`.
 
 ### Gemini CLI
 

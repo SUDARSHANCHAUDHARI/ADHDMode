@@ -60,37 +60,60 @@ The Claude startup hook is stored under `claude-hooks/` and is registered only b
 
 ## OpenAI Codex
 
-### Plugin marketplace
+ADHDMode uses Codex Agent Skills directly. The repository does not publish a Codex marketplace entry because the official repository-marketplace layout requires a second packaged plugin directory under `.agents/plugins/plugins/`, which would duplicate the canonical skill.
 
-Add the repository marketplace:
+### Repository-scoped installation
 
-```bash
-codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
-```
-
-Restart the ChatGPT desktop app, open the Plugins Directory, select the ADHDMode marketplace, and install the plugin.
-
-### Direct Agent Skill
-
-For a repository-scoped skill, copy the canonical directory to:
+Copy the canonical skill directory to:
 
 ```text
 $REPO_ROOT/.agents/skills/adhd-mode/
 ```
 
-For a user-scoped skill, copy it to:
+macOS or Linux from a local clone:
+
+```bash
+mkdir -p .agents/skills
+cp -R skills/adhd-mode .agents/skills/adhd-mode
+```
+
+Windows PowerShell from a local clone:
+
+```powershell
+New-Item -ItemType Directory -Force -Path .agents/skills | Out-Null
+Copy-Item -Recurse -Force skills/adhd-mode .agents/skills/adhd-mode
+```
+
+### User-scoped installation
+
+Copy the canonical skill directory to:
 
 ```text
 $HOME/.agents/skills/adhd-mode/
 ```
 
-Codex discovers the `SKILL.md` automatically. Invoke it explicitly with:
+macOS or Linux:
+
+```bash
+mkdir -p ~/.agents/skills
+cp -R skills/adhd-mode ~/.agents/skills/adhd-mode
+```
+
+Windows PowerShell:
+
+```powershell
+$skills = Join-Path $HOME ".agents/skills"
+New-Item -ItemType Directory -Force -Path $skills | Out-Null
+Copy-Item -Recurse -Force skills/adhd-mode (Join-Path $skills "adhd-mode")
+```
+
+Restart the Codex session, use `/skills` to confirm discovery, and invoke ADHDMode explicitly with:
 
 ```text
 $adhd-mode
 ```
 
-Use `/skills` to confirm that Codex discovered the skill.
+The optional `.codex-plugin/plugin.json` remains distribution metadata for environments that can load a local plugin directory. It declares only `./skills/` and does not include Claude hooks.
 
 ## Gemini CLI
 

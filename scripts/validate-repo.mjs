@@ -22,7 +22,6 @@ const requiredFiles = [
   'claude-hooks/hooks.json',
   'claude-hooks/session-start.mjs',
   '.codex-plugin/plugin.json',
-  '.agents/plugins/marketplace.json',
   'gemini-extension.json',
   'bin/adhd-mode.mjs',
   'lib/config.mjs',
@@ -43,9 +42,10 @@ for (const forbidden of [
   'hooks/session-start.js',
   'GEMINI.md',
   'skills/adhd-mode/agents/gemini.toml',
+  '.agents/plugins/marketplace.json',
 ]) {
   if (fs.existsSync(path.join(root, forbidden))) {
-    errors.push(`Forbidden legacy file remains: ${forbidden}`);
+    errors.push(`Forbidden legacy or unsupported file remains: ${forbidden}`);
   }
 }
 
@@ -56,7 +56,6 @@ const jsonFiles = [
   '.claude-plugin/plugin.json',
   '.claude-plugin/marketplace.json',
   '.codex-plugin/plugin.json',
-  '.agents/plugins/marketplace.json',
   'gemini-extension.json',
   'claude-hooks/hooks.json',
 ];
@@ -74,7 +73,7 @@ if (pkg) {
   if (pkg.engines?.node !== '>=20') errors.push('package.json must require Node.js >=20');
   if (pkg.private !== true) errors.push('package.json must remain private to prevent accidental npm publication');
   if (pkg.bin?.['adhd-mode'] !== './bin/adhd-mode.mjs') errors.push('CLI bin path is invalid');
-  if (!pkg.files?.includes('.agents/')) errors.push('Package must include the Codex marketplace directory');
+  if (pkg.files?.includes('.agents/')) errors.push('Package must not include an unsupported Codex marketplace directory');
 }
 
 const versioned = [
@@ -114,21 +113,9 @@ if (claudeMarketplace?.plugins?.[0]?.source !== './') {
 const codex = json.get('.codex-plugin/plugin.json');
 if (codex?.skills !== './skills/') errors.push('Codex plugin must bundle only ./skills/');
 if ('hooks' in (codex || {})) errors.push('Codex plugin must not declare Claude hooks');
-
-const codexMarketplace = json.get('.agents/plugins/marketplace.json');
-const codexEntry = codexMarketplace?.plugins?.[0];
-if (codexMarketplace?.interface?.displayName !== 'ADHDMode') {
-  errors.push('Codex marketplace display name must be ADHDMode');
-}
-if (codexEntry?.source?.source !== 'url') errors.push('Codex marketplace must use a Git URL source');
-if (codexEntry?.source?.url !== 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git') {
-  errors.push('Codex marketplace URL must target this repository');
-}
-if (codexEntry?.policy?.installation !== 'AVAILABLE') {
-  errors.push('Codex marketplace plugin must be available for installation');
-}
-if (codexEntry?.policy?.authentication !== 'ON_INSTALL') {
-  errors.push('Codex marketplace authentication must occur on installation');
+if (!codex?.author?.name) errors.push('Codex plugin must declare author.name');
+for (const field of ['displayName', 'shortDescription', 'longDescription', 'developerName', 'category']) {
+  if (!codex?.interface?.[field]) errors.push(`Codex plugin interface is missing ${field}`);
 }
 
 const config = json.get('config/default.json');
@@ -163,14 +150,16 @@ const install = fs.existsSync(path.join(root, 'docs/install.md')) ? readText('do
 for (const [file, text, phrases] of [
   ['README.md', readme, [
     '/adhd-mode:adhd-mode',
-    'codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode',
+    '$REPO_ROOT/.agents/skills/adhd-mode/',
+    '$adhd-mode',
     'gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git',
     'pull requests only',
   ]],
   ['docs/install.md', install, [
     'claude plugin validate . --strict',
     '/adhd-mode:adhd-mode',
-    'codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode',
+    '$REPO_ROOT/.agents/skills/adhd-mode/',
+    '$HOME/.agents/skills/adhd-mode/',
     'gemini skills install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git --path skills/adhd-mode --consent',
     '.github/skills/adhd-mode/',
     '.cursor/skills/adhd-mode/',
@@ -181,6 +170,8 @@ for (const [file, text, phrases] of [
   }
 }
 if (readme.includes('Then run `/adhd-mode`.')) errors.push('README uses the unnamespaced Claude skill command');
+if (readme.includes('codex plugin marketplace add')) errors.push('README advertises an unsupported Codex marketplace flow');
+if (install.includes('codex plugin marketplace add')) errors.push('Installation guide advertises an unsupported Codex marketplace flow');
 if (readme.includes('pushes to `main`')) errors.push('README incorrectly claims validation runs after merge');
 
 const hookPath = path.join(root, 'claude-hooks/session-start.mjs');

@@ -6,7 +6,8 @@
 - Added auto, quick, execute, debug, explain, decide, and resume modes.
 - Added quick, balanced, guided, and deep profiles.
 - Added Claude Code, Codex, Gemini CLI, Cursor, Copilot, and generic agent support.
-- Added current Claude and Codex marketplace metadata with exact installation identifiers.
+- Added current Claude marketplace metadata and exact namespaced installation identifiers.
+- Added Codex Agent Skill distribution through `.agents/skills/` without an unsupported marketplace entry.
 - Added exact Gemini extension and skill installation guidance.
 - Added opt-in Claude Code session persistence isolated from other plugin systems.
 - Added a JSON configuration schema and safe local CLI lifecycle.

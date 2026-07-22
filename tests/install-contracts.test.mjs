@@ -22,22 +22,13 @@ test('Claude marketplace and plugin use current install contracts', () => {
   assert.equal(plugin.hooks, './claude-hooks/hooks.json');
 });
 
-test('Codex marketplace points to the repository plugin', () => {
-  const marketplace = readJson('.agents/plugins/marketplace.json');
+test('Codex distribution uses one canonical Agent Skill', () => {
   const plugin = readJson('.codex-plugin/plugin.json');
-  const entry = marketplace.plugins[0];
 
-  assert.equal(marketplace.interface.displayName, 'ADHDMode');
-  assert.equal(entry.name, 'adhd-mode');
-  assert.deepEqual(entry.source, {
-    source: 'url',
-    url: repositoryUrl,
-    ref: 'main',
-  });
-  assert.equal(entry.policy.installation, 'AVAILABLE');
-  assert.equal(entry.policy.authentication, 'ON_INSTALL');
   assert.equal(plugin.skills, './skills/');
   assert.equal('hooks' in plugin, false);
+  assert.equal(fs.existsSync(path.join(root, '.agents/plugins/marketplace.json')), false);
+  assert.equal(fs.existsSync(path.join(root, 'skills/adhd-mode/SKILL.md')), true);
 });
 
 test('documented commands use current agent identifiers', () => {
@@ -46,11 +37,15 @@ test('documented commands use current agent identifiers', () => {
 
   assert.match(readme, /\/adhd-mode:adhd-mode/);
   assert.doesNotMatch(readme, /Then run `\/adhd-mode`\./);
-  assert.match(readme, /codex plugin marketplace add SUDARSHANCHAUDHARI\/ADHDMode/);
+  assert.doesNotMatch(readme, /codex plugin marketplace add/);
+  assert.match(readme, /\$REPO_ROOT\/\.agents\/skills\/adhd-mode\//);
+  assert.match(readme, /\$adhd-mode/);
   assert.match(readme, /gemini extensions install https:\/\/github\.com\/SUDARSHANCHAUDHARI\/ADHDMode\.git/);
   assert.match(readme, /pull requests only/);
 
   assert.match(install, /claude plugin validate \. --strict/);
+  assert.doesNotMatch(install, /codex plugin marketplace add/);
+  assert.match(install, /\$HOME\/\.agents\/skills\/adhd-mode\//);
   assert.match(install, /gemini skills install .* --path skills\/adhd-mode --consent/);
   assert.match(install, /\.github\/skills\/adhd-mode\//);
   assert.match(install, /\.cursor\/skills\/adhd-mode\//);
@@ -81,12 +76,13 @@ test('canonical skill can be copied into supported project skill locations', () 
   }
 });
 
-test('release package includes distribution metadata', () => {
+test('release package includes supported distribution metadata', () => {
   const pkg = readJson('package.json');
 
   assert.equal(pkg.private, true);
-  assert.ok(pkg.files.includes('.agents/'));
+  assert.equal(pkg.files.includes('.agents/'), false);
   assert.ok(pkg.files.includes('.claude-plugin/'));
   assert.ok(pkg.files.includes('.codex-plugin/'));
   assert.ok(pkg.files.includes('skills/'));
+  assert.equal(repositoryUrl.endsWith('/ADHDMode.git'), true);
 });
