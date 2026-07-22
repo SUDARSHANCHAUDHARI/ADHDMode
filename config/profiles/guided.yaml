@@ -1,0 +1,7 @@
+name: guided
+description: More visible state and smaller steps for execution-heavy work.
+defaults:
+  detailLevel: balanced
+  showProgress: true
+  showVerification: true
+  maxImmediateActions: 5
