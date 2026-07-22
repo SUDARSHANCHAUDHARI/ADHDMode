@@ -16,13 +16,16 @@
 - [x] No second complete policy copy exists.
 - [x] PR body records completed work, validation, blocker, and next phase.
 - [x] Only one pull-request validation workflow exists.
+- [x] Release helper defaults to non-mutating check mode.
+- [x] Release helper requires public visibility, authenticated GitHub CLI, clean `main`, release notes, and passing gates.
+- [x] Release helper has no force option and does not change repository visibility.
 
 ## Required before a public announcement
 
 - [ ] Change the GitHub repository from private to public with owner approval.
-- [ ] Confirm remote installation from an account without private repository access.
-- [ ] Create the `v0.1.0` tag.
-- [ ] Publish GitHub release notes from `docs/release-notes-v0.1.0.md`.
+- [ ] Run `npm run release:check` successfully.
+- [ ] Run `npm run release:publish` to create the version tag and GitHub release.
+- [ ] Confirm remote installation from an account without prior private repository access.
 
 ## After public release
 
