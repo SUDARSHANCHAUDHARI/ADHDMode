@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+adhd-mode.config.json
+evals/results/
