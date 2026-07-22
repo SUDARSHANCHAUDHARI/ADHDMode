@@ -1,0 +1,64 @@
+name: Update repository About
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  update-about:
+    name: Update About and topics
+    if: github.repository == 'SUDARSHANCHAUDHARI/ADHDMode'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update repository description and website
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --method PATCH "repos/$GITHUB_REPOSITORY" \
+            -f description='Task-aware, ADHD-friendly response layer for AI coding agents.' \
+            -f homepage='https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0'
+
+      - name: Update repository topics
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh api --method PUT \
+            -H 'Accept: application/vnd.github+json' \
+            "repos/$GITHUB_REPOSITORY/topics" \
+            --input - <<'JSON'
+          {
+            "names": [
+              "adhd",
+              "ai-agents",
+              "agent-skills",
+              "claude-code",
+              "codex",
+              "gemini-cli",
+              "github-copilot",
+              "cursor",
+              "developer-tools",
+              "productivity",
+              "prompt-engineering",
+              "ai-productivity"
+            ]
+          }
+          JSON
+
+      - name: Verify About metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          description="$(gh api "repos/$GITHUB_REPOSITORY" --jq .description)"
+          homepage="$(gh api "repos/$GITHUB_REPOSITORY" --jq .homepage)"
+          topics="$(gh api -H 'Accept: application/vnd.github+json' "repos/$GITHUB_REPOSITORY/topics" --jq '.names | sort | join(",")')"
+
+          test "$description" = 'Task-aware, ADHD-friendly response layer for AI coding agents.'
+          test "$homepage" = 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0'
+          test "$topics" = 'adhd,agent-skills,ai-agents,ai-productivity,claude-code,codex,cursor,developer-tools,gemini-cli,github-copilot,productivity,prompt-engineering'
