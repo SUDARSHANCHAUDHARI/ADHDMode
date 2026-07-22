@@ -10,8 +10,9 @@ ADHDMode v0.1.0 is the first production-ready code release of the task-aware res
 - Claude Code, Codex, Gemini CLI, Cursor, GitHub Copilot, and generic agent adapters
 - Safe local configuration CLI with atomic writes and backups
 - Opt-in Claude Code session persistence
+- Safe local release helper with non-mutating readiness checks
 - 42 original evaluation cases across 12 categories
-- Deterministic repository, configuration, manifest, hook, CLI, packaging, and installation-contract tests
+- Deterministic repository, configuration, manifest, hook, CLI, packaging, installation-contract, release-helper, and evaluation tests
 - One pull-request-only GitHub Actions workflow for Node.js 20 and 22
 
 ## Installation identifiers
@@ -38,6 +39,15 @@ npm run pack:check
 ```
 
 The package remains marked `private` to prevent accidental npm publication.
+
+## Maintainer release commands
+
+```bash
+npm run release:check
+npm run release:publish
+```
+
+The check command does not modify Git or GitHub. Publish mode stops unless the repository is public, GitHub CLI is authenticated, `main` is clean, the release notes exist, and the full release gate passes.
 
 ## Known release condition
 
