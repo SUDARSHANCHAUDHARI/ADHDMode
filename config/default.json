@@ -1,0 +1,12 @@
+{
+  "$schema": "../adhd-mode.schema.json",
+  "mode": "auto",
+  "profile": "balanced",
+  "detailLevel": "balanced",
+  "showProgress": true,
+  "showVerification": true,
+  "maxImmediateActions": 5,
+  "timeEstimates": "grounded-only",
+  "language": "auto",
+  "alwaysOn": false
+}
