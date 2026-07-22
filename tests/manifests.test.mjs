@@ -7,10 +7,10 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (file) => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
 
-test('all manifest versions match package version', () => {
+test('all versioned manifests match package version', () => {
   const version = read('package.json').version;
   assert.equal(read('.claude-plugin/plugin.json').version, version);
-  assert.equal(read('.claude-plugin/marketplace.json').metadata.version, version);
+  assert.equal(read('.claude-plugin/marketplace.json').version, version);
   assert.equal(read('.codex-plugin/plugin.json').version, version);
   assert.equal(read('gemini-extension.json').version, version);
 });
@@ -20,4 +20,14 @@ test('agent-specific loading stays isolated', () => {
   assert.equal(read('.codex-plugin/plugin.json').skills, './skills/');
   assert.equal('hooks' in read('.codex-plugin/plugin.json'), false);
   assert.equal(fs.existsSync(path.join(root, 'hooks/hooks.json')), false);
+});
+
+test('repository marketplaces point to their supported plugin formats', () => {
+  const claude = read('.claude-plugin/marketplace.json');
+  const codex = read('.agents/plugins/marketplace.json');
+
+  assert.equal(claude.$schema, 'https://json.schemastore.org/claude-code-marketplace.json');
+  assert.equal(claude.plugins[0].source, './');
+  assert.equal(codex.interface.displayName, 'ADHDMode');
+  assert.equal(codex.plugins[0].source.url, 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git');
 });

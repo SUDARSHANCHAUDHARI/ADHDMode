@@ -1,5 +1,7 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "adhd-mode",
+  "displayName": "ADHDMode",
   "version": "0.1.0",
   "description": "Task-aware, ADHD-friendly output for Claude Code",
   "author": {

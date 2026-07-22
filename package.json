@@ -8,6 +8,7 @@
     "adhd-mode": "./bin/adhd-mode.mjs"
   },
   "files": [
+    ".agents/",
     ".claude-plugin/",
     ".codex-plugin/",
     "adapters/",

@@ -22,11 +22,15 @@ const requiredFiles = [
   'claude-hooks/hooks.json',
   'claude-hooks/session-start.mjs',
   '.codex-plugin/plugin.json',
+  '.agents/plugins/marketplace.json',
   'gemini-extension.json',
   'bin/adhd-mode.mjs',
   'lib/config.mjs',
   'lib/paths.mjs',
+  'docs/install.md',
+  'docs/release-notes-v0.1.0.md',
   'evals/cases.jsonl',
+  'tests/install-contracts.test.mjs',
   '.github/workflows/validate.yml',
 ];
 
@@ -52,6 +56,7 @@ const jsonFiles = [
   '.claude-plugin/plugin.json',
   '.claude-plugin/marketplace.json',
   '.codex-plugin/plugin.json',
+  '.agents/plugins/marketplace.json',
   'gemini-extension.json',
   'claude-hooks/hooks.json',
 ];
@@ -69,11 +74,12 @@ if (pkg) {
   if (pkg.engines?.node !== '>=20') errors.push('package.json must require Node.js >=20');
   if (pkg.private !== true) errors.push('package.json must remain private to prevent accidental npm publication');
   if (pkg.bin?.['adhd-mode'] !== './bin/adhd-mode.mjs') errors.push('CLI bin path is invalid');
+  if (!pkg.files?.includes('.agents/')) errors.push('Package must include the Codex marketplace directory');
 }
 
 const versioned = [
   ['.claude-plugin/plugin.json', 'version'],
-  ['.claude-plugin/marketplace.json', 'metadata.version'],
+  ['.claude-plugin/marketplace.json', 'version'],
   ['.codex-plugin/plugin.json', 'version'],
   ['gemini-extension.json', 'version'],
 ];
@@ -86,14 +92,44 @@ for (const [file, field] of versioned) {
 }
 
 const claude = json.get('.claude-plugin/plugin.json');
+if (claude?.$schema !== 'https://json.schemastore.org/claude-code-plugin-manifest.json') {
+  errors.push('Claude plugin must declare the current manifest schema');
+}
+if (claude?.displayName !== 'ADHDMode') errors.push('Claude plugin displayName must be ADHDMode');
 if (claude?.hooks !== './claude-hooks/hooks.json') {
   errors.push('Claude plugin must explicitly isolate its hooks under claude-hooks/');
 }
+
+const claudeMarketplace = json.get('.claude-plugin/marketplace.json');
+if (claudeMarketplace?.$schema !== 'https://json.schemastore.org/claude-code-marketplace.json') {
+  errors.push('Claude marketplace must declare the current marketplace schema');
+}
+if ('metadata' in (claudeMarketplace || {})) {
+  errors.push('Claude marketplace version and description must use supported top-level fields');
+}
+if (claudeMarketplace?.plugins?.[0]?.source !== './') {
+  errors.push('Claude marketplace source must be ./');
+}
+
 const codex = json.get('.codex-plugin/plugin.json');
 if (codex?.skills !== './skills/') errors.push('Codex plugin must bundle only ./skills/');
 if ('hooks' in (codex || {})) errors.push('Codex plugin must not declare Claude hooks');
-const marketplace = json.get('.claude-plugin/marketplace.json');
-if (marketplace?.plugins?.[0]?.source !== './') errors.push('Claude marketplace source must be ./');
+
+const codexMarketplace = json.get('.agents/plugins/marketplace.json');
+const codexEntry = codexMarketplace?.plugins?.[0];
+if (codexMarketplace?.interface?.displayName !== 'ADHDMode') {
+  errors.push('Codex marketplace display name must be ADHDMode');
+}
+if (codexEntry?.source?.source !== 'url') errors.push('Codex marketplace must use a Git URL source');
+if (codexEntry?.source?.url !== 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git') {
+  errors.push('Codex marketplace URL must target this repository');
+}
+if (codexEntry?.policy?.installation !== 'AVAILABLE') {
+  errors.push('Codex marketplace plugin must be available for installation');
+}
+if (codexEntry?.policy?.authentication !== 'ON_INSTALL') {
+  errors.push('Codex marketplace authentication must occur on installation');
+}
 
 const config = json.get('config/default.json');
 if (config) {
@@ -120,6 +156,32 @@ if (fs.existsSync(skillPath)) {
   }
   if (!/^---\n[\s\S]+?\n---\n/.test(skill)) errors.push('SKILL.md must have valid YAML frontmatter');
 }
+
+const readText = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+const readme = fs.existsSync(path.join(root, 'README.md')) ? readText('README.md') : '';
+const install = fs.existsSync(path.join(root, 'docs/install.md')) ? readText('docs/install.md') : '';
+for (const [file, text, phrases] of [
+  ['README.md', readme, [
+    '/adhd-mode:adhd-mode',
+    'codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode',
+    'gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git',
+    'pull requests only',
+  ]],
+  ['docs/install.md', install, [
+    'claude plugin validate . --strict',
+    '/adhd-mode:adhd-mode',
+    'codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode',
+    'gemini skills install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git --path skills/adhd-mode --consent',
+    '.github/skills/adhd-mode/',
+    '.cursor/skills/adhd-mode/',
+  ]],
+]) {
+  for (const phrase of phrases) {
+    if (!text.includes(phrase)) errors.push(`${file} is missing installation contract: ${phrase}`);
+  }
+}
+if (readme.includes('Then run `/adhd-mode`.')) errors.push('README uses the unnamespaced Claude skill command');
+if (readme.includes('pushes to `main`')) errors.push('README incorrectly claims validation runs after merge');
 
 const hookPath = path.join(root, 'claude-hooks/session-start.mjs');
 function runHook(configDir, pluginRoot = root) {
@@ -158,6 +220,9 @@ if (fs.existsSync(workflowDir)) {
   if (workflows.length !== 1 || workflows[0] !== 'validate.yml') {
     errors.push(`Expected exactly one workflow named validate.yml, found: ${workflows.join(', ')}`);
   }
+  const workflow = readText('.github/workflows/validate.yml');
+  if (!/^\s*pull_request:/m.test(workflow)) errors.push('Validation workflow must run on pull requests');
+  if (/^\s*push:/m.test(workflow)) errors.push('Validation workflow must not run automatically after merge');
 }
 
 if (errors.length > 0) {

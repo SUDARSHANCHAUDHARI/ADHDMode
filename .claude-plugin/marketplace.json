@@ -1,12 +1,11 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "adhd-mode",
+  "version": "0.1.0",
+  "description": "Task-aware, ADHD-friendly response skills for coding agents",
   "owner": {
     "name": "Sudarshan Kishor Chaudhari",
     "url": "https://github.com/SUDARSHANCHAUDHARI"
-  },
-  "metadata": {
-    "description": "Task-aware, ADHD-friendly response skills for coding agents",
-    "version": "0.1.0"
   },
   "plugins": [
     {
