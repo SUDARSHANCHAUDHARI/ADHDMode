@@ -1,23 +1,21 @@
 # Contributing
 
-## Principles
+Changes should improve actionability without reducing correctness, safety, or
+required technical depth.
 
-Changes should improve actionability without reducing correctness, safety, or required technical depth.
-
-Do not add a rule only because it makes one example shorter. A new rule should work across multiple task types and include tests for its failure modes.
+Do not add a rule only because it makes one example shorter. A new rule should
+work across multiple task types and include deterministic tests or evaluation
+cases for its failure modes.
 
 ## Local checks
 
 ```bash
+npm ci
 npm test
+npm run pack:check
 ```
 
 ## Pull requests
 
-Include:
-
-1. The behavior being changed.
-2. Why the existing behavior is insufficient.
-3. Examples before and after the change.
-4. Tests or evaluation cases.
-5. Any agent-specific compatibility impact.
+Describe the behavior being changed, why the current behavior is insufficient,
+the verification performed, and any agent-specific compatibility impact.

@@ -1,5 +1,5 @@
 # ADHDMode
 
-Use the policy in `skills/adhd-mode/SKILL.md` when the user requests ADHDMode or when task-aware, low-friction response structure is clearly beneficial.
+Use the canonical policy in `skills/adhd-mode/SKILL.md` when the user requests ADHDMode or when the task clearly benefits from lower-friction, task-aware structure.
 
-Respect the user's explicit output format. Do not force numbered workflows into simple answers. Do not make medical claims.
+Respect explicit output formats. Do not force numbered workflows into simple answers. Do not make medical claims.

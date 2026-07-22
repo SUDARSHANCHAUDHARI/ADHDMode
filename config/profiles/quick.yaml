@@ -1,7 +1,6 @@
 name: quick
-description: Minimal structure for direct, low-risk requests.
-defaults:
-  detailLevel: compact
-  showProgress: false
-  showVerification: false
-  maxImmediateActions: 3
+description: Minimal navigation for short, low-risk tasks.
+detailLevel: compact
+showProgress: false
+showVerification: true
+maxImmediateActions: 3

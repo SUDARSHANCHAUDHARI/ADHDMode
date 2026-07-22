@@ -1,22 +1,32 @@
 # Evaluations
 
-Version 0.1.0 includes deterministic case validation. The cases cover response contracts and behavior expectations without requiring an API key.
+ADHDMode separates deterministic release checks from optional model-backed evaluation.
 
-Future model evaluations should compare:
+## Deterministic checks
 
-1. Baseline behavior.
-2. Current ADHDMode behavior.
-3. Previous released ADHDMode behavior.
+`npm test` verifies:
 
-Recommended scoring:
+- repository structure and manifest consistency
+- canonical policy boundaries
+- configuration validation and safe writes
+- CLI lifecycle and machine-readable output
+- Claude hook enabled, disabled, and failure states
+- evaluation case format and category coverage
 
-| Dimension | Weight |
-| --- | ---: |
-| Correctness | 30% |
-| Output contract adherence | 20% |
-| Agent autonomy | 15% |
-| Actionability | 15% |
-| Safety | 10% |
-| Cognitive load | 10% |
+## Case set
 
-Evaluation runners must be isolated from user-level plugins, memory, hooks, and instruction files. Model and runner versions must be pinned in published results.
+`evals/cases.jsonl` contains original cases covering direct answers, output contracts, editing, execution, debugging, repeated failures, interruptions, decisions, destructive operations, ambiguity, unsupported estimates, multilingual work, and medical boundaries.
+
+Each case declares:
+
+- `id`
+- `category`
+- expected `mode`
+- prompt
+- required behaviors in `must`
+- forbidden behaviors in `must_not`
+- risk level
+
+## Model-backed evaluation
+
+Model judging is intentionally not part of the v0.1.0 merge gate. It should be added only after runners can isolate user configuration, pin model versions, control cost, blind conditions, and reject incomplete comparisons.

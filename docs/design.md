@@ -1,24 +1,21 @@
 # Design
 
-## Why task-aware modes
+## One canonical policy
 
-A fixed concise template works for some execution tasks but can damage detailed explanations, decisions, incident reports, and strict output contracts.
+`skills/adhd-mode/SKILL.md` is the only complete behavior policy. Platform manifests and adapters package or point to it.
 
-ADHDMode first identifies the job the response must perform, then applies the lightest structure that makes that job easier to complete.
+## Task-aware modes
 
-## Canonical policy
+A direct answer should not look like a migration plan. A debugging update should not look like a tutorial. Modes let the structure follow the task.
 
-`skills/adhd-mode/SKILL.md` is the canonical response policy.
+## Profiles are presentation only
 
-Agent adapters should reference or reproduce it without changing behavior. Adapter drift must be detected before release.
+Profiles adjust density and visible progress. They do not change factual standards, safety rules, permissions, or output contracts.
 
-## Boundaries
+## Agent isolation
 
-ADHDMode must not:
+Claude Code's optional startup hook is stored under `claude-hooks/` and referenced explicitly by the Claude plugin manifest. The Codex manifest bundles only `skills/`, preventing accidental cross-agent hook loading.
 
-- weaken safety checks
-- invent verification or completion
-- create unsupported time estimates
-- diagnose ADHD
-- force workflows into casual conversation
-- remove details required by the user or task
+## Grounded completion
+
+ADHDMode distinguishes performed verification from suggested verification. It does not claim completion when evidence is missing.

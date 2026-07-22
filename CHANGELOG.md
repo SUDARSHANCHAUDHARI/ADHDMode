@@ -3,10 +3,11 @@
 ## 0.1.0
 
 - Added the original ADHDMode response policy.
-- Added seven task-aware response modes.
+- Added auto, quick, execute, debug, explain, decide, and resume modes.
 - Added quick, balanced, guided, and deep profiles.
-- Added Claude Code, Codex, Gemini, Cursor, Copilot, Zed, Hermes, and generic adapter guidance.
-- Added opt-in Claude Code session persistence.
-- Added JSON configuration schema and validation CLI.
-- Added deterministic repository and evaluation-case checks.
-- Added installation, configuration, design, and evaluation documentation.
+- Added Claude Code, Codex, Gemini CLI, Cursor, Copilot, and generic agent support.
+- Added opt-in Claude Code session persistence isolated from other plugin systems.
+- Added a JSON configuration schema and safe local CLI lifecycle.
+- Added deterministic repository, configuration, CLI, hook, packaging, and evaluation checks.
+- Added 42 original evaluation cases across low, medium, and high-risk tasks.
+- Added one minimal pull-request validation workflow.

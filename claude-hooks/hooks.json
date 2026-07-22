@@ -6,9 +6,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/session-start.js\"",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/claude-hooks/session-start.mjs\"",
             "timeout": 5,
-            "statusMessage": "Checking ADHDMode preference..."
+            "statusMessage": "Checking ADHDMode always-on setting"
           }
         ]
       }

@@ -2,18 +2,59 @@
   "name": "adhd-mode",
   "version": "0.1.0",
   "private": true,
-  "description": "ADHD-friendly response layer for AI coding agents",
+  "description": "Task-aware, ADHD-friendly response layer for AI coding agents",
   "type": "module",
   "bin": {
     "adhd-mode": "./bin/adhd-mode.mjs"
   },
+  "files": [
+    ".claude-plugin/",
+    ".codex-plugin/",
+    "adapters/",
+    "bin/",
+    "claude-hooks/",
+    "config/",
+    "docs/",
+    "evals/",
+    "lib/",
+    "scripts/",
+    "skills/",
+    "adhd-mode.schema.json",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "INSPIRATIONS.md",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "gemini-extension.json"
+  ],
   "scripts": {
-    "test": "node scripts/validate-repo.mjs && node scripts/validate-cases.mjs",
+    "test": "node scripts/validate-repo.mjs && node scripts/validate-cases.mjs && node --test tests/*.test.mjs",
     "validate": "node scripts/validate-repo.mjs",
-    "validate:cases": "node scripts/validate-cases.mjs"
+    "validate:cases": "node scripts/validate-cases.mjs",
+    "test:unit": "node --test tests/*.test.mjs",
+    "pack:check": "npm pack --dry-run --json"
   },
   "engines": {
     "node": ">=20"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode/issues"
+  },
+  "homepage": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode#readme",
+  "author": "Sudarshan Kishor Chaudhari",
+  "keywords": [
+    "adhd",
+    "agent-skills",
+    "claude-code",
+    "codex",
+    "gemini-cli",
+    "github-copilot",
+    "productivity"
+  ],
   "license": "MIT"
 }

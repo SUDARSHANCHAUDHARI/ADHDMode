@@ -1,31 +1,37 @@
 # Configuration
 
-The default configuration is stored in `config/default.json` and validated against `adhd-mode.schema.json`.
+ADHDMode configuration changes presentation. It never changes correctness, safety, permission boundaries, or explicit output contracts.
 
-## Profiles
+Create a configuration:
 
-### quick
+```bash
+node bin/adhd-mode.mjs init
+```
 
-For direct questions and small, low-risk tasks.
+The default location is `./adhd-mode.config.json`. Override it with `--config` or `ADHD_MODE_CONFIG`.
 
-### balanced
+## Fields
 
-Default profile. Keeps actions visible while preserving enough context.
+| Field | Values | Purpose |
+| --- | --- | --- |
+| `mode` | `auto`, `quick`, `execute`, `debug`, `explain`, `decide`, `resume` | Select response structure |
+| `profile` | `quick`, `balanced`, `guided`, `deep` | Select navigation density |
+| `detailLevel` | `compact`, `balanced`, `detailed` | Preferred explanation depth |
+| `showProgress` | boolean | Show recoverable state during long tasks |
+| `showVerification` | boolean | Include verification or success criteria |
+| `maxImmediateActions` | 1 to 10 | Limit the visible current action group |
+| `timeEstimates` | `never`, `grounded-only` | Prevent unsupported duration claims |
+| `language` | string | Preferred language, or `auto` |
+| `alwaysOn` | boolean | Stored preference; the CLI flag controls Claude startup activation |
 
-### guided
+## Commands
 
-Uses smaller execution steps and more visible progress state.
+```bash
+node bin/adhd-mode.mjs validate
+node bin/adhd-mode.mjs config
+node bin/adhd-mode.mjs mode debug
+node bin/adhd-mode.mjs profile guided
+node bin/adhd-mode.mjs status --json
+```
 
-### deep
-
-Preserves full explanation, decision context, risks, and verification details.
-
-## Time estimates
-
-`grounded-only` permits estimates only when supported by task scope, measured runtime, tool output, or relevant historical data.
-
-`never` suppresses estimates.
-
-## Immediate actions
-
-`maxImmediateActions` controls the number of actions shown in the immediate path. It does not permit required information to be deleted. Remaining work should move to a clearly named later or reference section.
+`init --force` creates a timestamped backup before replacing an existing file.

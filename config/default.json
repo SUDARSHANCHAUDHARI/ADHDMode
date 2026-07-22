@@ -1,5 +1,5 @@
 {
-  "$schema": "../adhd-mode.schema.json",
+  "$schema": "./adhd-mode.schema.json",
   "mode": "auto",
   "profile": "balanced",
   "detailLevel": "balanced",

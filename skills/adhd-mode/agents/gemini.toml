@@ -1,8 +1,0 @@
-description = "Enable ADHDMode response structure for the current session."
-
-prompt = """
-Read and apply the complete instructions from:
-skills/adhd-mode/SKILL.md
-
-Keep the mode active until the user asks to disable ADHDMode or return to normal mode.
-"""

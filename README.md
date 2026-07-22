@@ -1,8 +1,8 @@
 # ADHDMode
 
-**ADHD-friendly output for AI coding agents.**
+**Task-aware, ADHD-friendly output for AI coding agents.**
 
-ADHDMode is a portable response layer that helps AI assistants produce work that is easier to start, follow, resume, and verify. It adapts to the task instead of forcing every answer into the same short template.
+ADHDMode helps assistants produce work that is easier to start, follow, resume, and verify. It adapts the response shape to the task instead of forcing every answer into the same short template.
 
 ADHDMode is a communication preference tool. It does not diagnose, treat, or prove ADHD.
 
@@ -10,7 +10,7 @@ ADHDMode is a communication preference tool. It does not diagnose, treat, or pro
 
 Without ADHDMode:
 
-> Your Playwright test may be failing for several reasons. You could inspect the locator, check whether the page is ready, review the trace, and consider whether the test data is correct. It may also be useful to check browser differences.
+> Your Playwright test may be failing for several reasons. You could inspect the locator, check whether the page is ready, review the trace, and consider whether the test data is correct.
 
 With ADHDMode:
 
@@ -20,9 +20,9 @@ With ADHDMode:
 >
 > **Fix:** Wait for the overlay to disappear before clicking.
 >
-> 1. Add `await expect(page.getByTestId('loading')).toBeHidden()`
-> 2. Click `page.getByRole('button', { name: 'Pay' })`
-> 3. Run `npx playwright test checkout.spec.ts`
+> 1. Add `await expect(page.getByTestId('loading')).toBeHidden()`.
+> 2. Click the Pay button.
+> 3. Run `npx playwright test checkout.spec.ts`.
 >
 > **Verified when:** the test passes three consecutive runs.
 
@@ -30,7 +30,7 @@ With ADHDMode:
 
 | Mode | Best for | Output behavior |
 | --- | --- | --- |
-| `auto` | Default use | Selects the best structure for the request |
+| `auto` | Default use | Selects the best structure |
 | `quick` | Direct questions | Answer first, no forced workflow |
 | `execute` | Coding and setup | Objective, actions, result, verification |
 | `debug` | Failures and incidents | Evidence, cause, fix, verification |
@@ -47,79 +47,60 @@ claude plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
 claude plugin install adhd-mode@adhd-mode
 ```
 
-Then run:
+Then run `/adhd-mode`.
 
-```text
-/adhd-mode
-```
+### Codex and other Agent Skills tools
 
-### Codex
+Install or copy `skills/adhd-mode/` into a supported skills directory, then invoke `$adhd-mode` where explicit skill commands are supported.
 
-Copy `skills/adhd-mode` into a location read by your Codex setup, or use the generated Codex metadata in `skills/adhd-mode/agents/openai.yaml`.
+See [docs/install.md](docs/install.md) for platform-specific guidance.
 
-Invoke with:
+## Local CLI
 
-```text
-$adhd-mode
-```
-
-### Other agents
-
-See [installation instructions](docs/install.md) for Cursor, GitHub Copilot, Gemini CLI, Zed, Hermes, and generic agents.
-
-## Configuration
-
-Start from [`config/default.json`](config/default.json).
-
-```json
-{
-  "mode": "auto",
-  "profile": "balanced",
-  "detailLevel": "balanced",
-  "showProgress": true,
-  "showVerification": true,
-  "maxImmediateActions": 5,
-  "timeEstimates": "grounded-only",
-  "language": "auto",
-  "alwaysOn": false
-}
-```
-
-Validate the repository:
+Requires Node.js 20 or newer.
 
 ```bash
+node bin/adhd-mode.mjs init
+node bin/adhd-mode.mjs validate
+node bin/adhd-mode.mjs mode debug
+node bin/adhd-mode.mjs profile guided
+node bin/adhd-mode.mjs status
+```
+
+Claude Code always-on mode remains opt-in:
+
+```bash
+node bin/adhd-mode.mjs enable
+node bin/adhd-mode.mjs disable
+```
+
+## Validate the project
+
+```bash
+npm ci
 npm test
+npm run pack:check
 ```
 
-Validate a custom configuration:
+A single GitHub Actions workflow runs the same deterministic checks on pull requests and pushes to `main`.
 
-```bash
-node bin/adhd-mode.mjs validate path/to/adhd-mode.config.json
-```
+## Design rules
 
-## Design goals
-
-1. Make the useful result visible immediately.
+1. Put the useful result where it can be seen immediately.
 2. Reduce the effort required to begin.
 3. Preserve technical depth when the task needs it.
 4. Keep long work easy to resume.
-5. Let agents perform work they already have the tools and permission to do.
+5. Let agents perform work they already have permission and tools to do.
 6. Make completion testable.
 7. Avoid unsupported time estimates and false completion claims.
 8. Respect explicit output formats.
 
-## Supported agents
+## Project status
 
-ADHDMode includes source material and adapter guidance for Claude Code, OpenAI Codex, Cursor, GitHub Copilot, Gemini CLI, Zed, Hermes, and generic Agent Skills or `AGENTS.md` based tools.
+`v0.1.0` is the first production-ready skill release candidate. It includes the canonical policy, task modes, profiles, multi-agent metadata, configuration CLI, deterministic validation, and original evaluation cases.
 
-## Status
-
-`v0.1.0` is the first working skill release. It includes the core policy, profiles, agent metadata, installation guidance, configuration validation, and contract tests.
-
-## License
+## License and inspiration
 
 MIT. See [LICENSE](LICENSE).
 
-## Inspiration
-
-The portable skill approach was inspired by [`ayghri/i-have-adhd`](https://github.com/ayghri/i-have-adhd). ADHDMode uses an original policy, structure, examples, configuration model, and validation suite. See [INSPIRATIONS.md](INSPIRATIONS.md).
+The portable skill approach was inspired by [`ayghri/i-have-adhd`](https://github.com/ayghri/i-have-adhd). ADHDMode uses an original policy, structure, examples, configuration model, hook implementation, and validation suite. See [INSPIRATIONS.md](INSPIRATIONS.md).

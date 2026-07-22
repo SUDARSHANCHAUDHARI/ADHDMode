@@ -11,7 +11,7 @@ metadata:
 
 ADHDMode is a response preference. It does not diagnose or treat ADHD.
 
-The goal is not to make every answer short. The goal is to make the useful part easy to find and the next state easy to recover.
+The goal is not to make every answer short. The goal is to make the useful part easy to find, reduce starting friction, and keep the current state recoverable.
 
 ## Instruction precedence
 
@@ -107,13 +107,13 @@ Do not begin with praise, an announcement of what you will do, or a restatement 
 
 For executable work, make the first action concrete and safe.
 
-A useful action identifies the command, file, location, value, or decision. Avoid instructions such as "review the code" when the agent can name the exact file or perform the review itself.
+A useful action identifies the command, file, location, value, or decision. Avoid vague instructions such as "review the code" when the agent can name the exact file or perform the review itself.
 
 ### Match structure to complexity
 
 Do not force lists into simple answers.
 
-For multi-step work, keep each immediate action bounded. Show no more than five immediate actions by default. Put required remaining work under Later, Risks, Reference, or Optional instead of deleting it.
+For multi-step work, keep each immediate action bounded. Show no more than the configured maximum immediate actions. Put required remaining work under Later, Risks, Reference, or Optional instead of deleting it.
 
 ### Keep progress recoverable
 
@@ -176,6 +176,29 @@ Never invent percentages, dates, progress, test results, or completion claims.
 After work changes state, include the verification performed or the exact success condition.
 
 Do not say "done" when tests were not run or the result was not inspected.
+
+## Configuration
+
+Configuration changes presentation, not correctness or safety. When a harness exposes ADHDMode configuration, apply these fields:
+
+- `mode`: selected task mode, or `auto`.
+- `profile`: `quick`, `balanced`, `guided`, or `deep`.
+- `detailLevel`: compact, balanced, or detailed.
+- `showProgress`: show recoverable state during long work.
+- `showVerification`: include performed verification or success criteria.
+- `maxImmediateActions`: visual limit for the current action group, not a limit on required information.
+- `timeEstimates`: `never` or `grounded-only`.
+- `language`: preferred response language, with `auto` following the user.
+- `alwaysOn`: installation preference only. It never weakens explicit user control.
+
+Profile behavior:
+
+- `quick`: compact presentation for familiar, low-risk work.
+- `balanced`: default clarity with sufficient technical detail.
+- `guided`: smaller actions and more visible state for unfamiliar work.
+- `deep`: detailed mechanisms, alternatives, and tradeoffs.
+
+A profile never permits unsupported claims, unsafe actions, or ignored output contracts.
 
 ## Safety and failure recovery
 

@@ -1,5 +1,7 @@
 # Installation
 
+ADHDMode keeps one canonical policy at `skills/adhd-mode/SKILL.md`. Agent-specific files only point to or package that policy.
+
 ## Claude Code
 
 ```bash
@@ -7,58 +9,59 @@ claude plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
 claude plugin install adhd-mode@adhd-mode
 ```
 
-Run `/adhd-mode`.
+Start a new session and run `/adhd-mode`.
 
-### Optional always-on mode
-
-```bash
-touch ~/.claude/.adhd-mode-always
-```
-
-Return to opt-in behavior:
+Optional always-on mode:
 
 ```bash
-rm ~/.claude/.adhd-mode-always
+node bin/adhd-mode.mjs enable
 ```
 
-The conventional `hooks/hooks.json` file is used directly. It is intentionally not declared again in the plugin manifest.
+Disable it without uninstalling:
 
-## Codex
+```bash
+node bin/adhd-mode.mjs disable
+```
 
-Install or copy `skills/adhd-mode` into the skills directory used by your Codex setup. The repository includes `skills/adhd-mode/agents/openai.yaml`.
+The Claude startup hook is stored under `claude-hooks/` and is registered only by the Claude plugin manifest. It does not live in the root conventional hook directory, so other plugin systems do not load it accidentally.
 
-Run `$adhd-mode`.
+## OpenAI Codex
 
-For project-level always-on behavior, reference the canonical skill from the project `AGENTS.md`.
+The repository contains a standard Agent Skill in `skills/adhd-mode/` and Codex presentation metadata in `skills/adhd-mode/agents/openai.yaml`.
 
-## Cursor
-
-Copy `skills/adhd-mode/` to `.cursor/skills/adhd-mode/`.
-
-Use a real directory copy rather than a symlink so Windows clones and ZIP downloads remain reliable.
-
-## GitHub Copilot
-
-Copy the content of `adapters/copilot/copilot-instructions.md` into the repository's `.github/copilot-instructions.md`, or install the canonical skill in a Copilot-supported skills directory.
+Use the plugin marketplace flow supported by your Codex version, or copy `skills/adhd-mode/` into a discovered user or project skills directory. Invoke `$adhd-mode` when explicit invocation is available.
 
 ## Gemini CLI
 
-Install the repository as an extension when supported, or copy `skills/adhd-mode/agents/gemini.toml` into the Gemini commands directory.
+Gemini CLI can discover Agent Skills. Install this repository as an extension when your version supports bundled skills, or copy `skills/adhd-mode/` into a discovered skills directory.
 
-The extension loads `GEMINI.md`, which points to the canonical skill.
+The extension manifest does not inject a global `GEMINI.md`; the skill stays explicit and portable.
 
-## Zed, Hermes, and generic Agent Skills tools
+## GitHub Copilot
 
-Import or copy `skills/adhd-mode/` into the user-level or project-level skill directory supported by the agent.
+Copy the canonical skill directory into one of Copilot's supported skill locations, such as:
 
-For agents based on `AGENTS.md`, start with `adapters/generic/AGENTS.md`.
+```text
+.github/skills/adhd-mode/
+.agents/skills/adhd-mode/
+```
+
+For always-on project instructions, adapt `adapters/copilot/copilot-instructions.md` into `.github/copilot-instructions.md`.
+
+## Cursor
+
+Copy `skills/adhd-mode/` into `.cursor/skills/adhd-mode/` or the current user-level Cursor skills location. Use a real copy rather than a symlink.
+
+## Generic agents
+
+Copy `skills/adhd-mode/` into the tool's Agent Skills directory. For agents that only read `AGENTS.md`, use `adapters/generic/AGENTS.md` as the project pointer.
 
 ## Verify
 
-Ask the agent:
+From the repository root:
 
-```text
-Enable ADHDMode. Explain what response modes are available.
+```bash
+npm ci
+npm test
+node bin/adhd-mode.mjs doctor
 ```
-
-A valid response should name the modes without claiming that ADHDMode diagnoses ADHD.

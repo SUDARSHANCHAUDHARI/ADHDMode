@@ -1,11 +1,13 @@
 # Security
 
-ADHDMode changes response structure. It must never weaken safety checks, confirmation requirements, permission boundaries, or destructive-action protections.
+ADHDMode changes response structure. It must never weaken safety checks,
+confirmation requirements, permission boundaries, secret handling, or
+protections around destructive actions.
 
 ## Report a vulnerability
 
-Open a private GitHub security advisory for this repository.
+Use GitHub's private security advisory feature for this repository. Include the
+affected file or command, reproduction steps, expected and actual behavior,
+possible impact, and proposed mitigation when known.
 
-Include the affected file or command, reproduction steps, expected and actual behavior, possible impact, and proposed mitigation when known.
-
-Do not include secrets, access tokens, or private user data in public issues.
+Do not include secrets, tokens, or private user data in public issues.

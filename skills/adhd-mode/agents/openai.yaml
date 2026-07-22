@@ -1,7 +1,11 @@
 interface:
-  display_name: "ADHD Mode"
+  display_name: "ADHDMode"
   short_description: "Task-aware, ADHD-friendly responses"
-  default_prompt: "Use $adhd-mode to make the response easy to start, follow, resume, and verify."
+  long_description: "Make AI work easier to start, follow, resume, and verify without removing required technical depth."
+  developer_name: "Sudarshan Kishor Chaudhari"
+  category: "Productivity"
+  brand_color: "#7C3AED"
+  default_prompt: "Use $adhd-mode to make this task easier to start, follow, and verify."
 
 policy:
   allow_implicit_invocation: true

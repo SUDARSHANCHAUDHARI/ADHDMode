@@ -1,7 +1,6 @@
 name: balanced
-description: Clear actions with enough context for most technical work.
-defaults:
-  detailLevel: balanced
-  showProgress: true
-  showVerification: true
-  maxImmediateActions: 5
+description: Default balance of clarity, actionability, and technical depth.
+detailLevel: balanced
+showProgress: true
+showVerification: true
+maxImmediateActions: 5
