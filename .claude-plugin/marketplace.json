@@ -1,0 +1,21 @@
+{
+  "name": "adhd-mode",
+  "owner": {
+    "name": "Sudarshan Kishor Chaudhari",
+    "url": "https://github.com/SUDARSHANCHAUDHARI"
+  },
+  "metadata": {
+    "description": "Task-aware, ADHD-friendly response skills for coding agents",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "adhd-mode",
+      "source": "./",
+      "description": "Task-aware, ADHD-friendly output for Claude Code",
+      "version": "0.1.0",
+      "category": "productivity",
+      "tags": ["adhd", "accessibility", "productivity", "output-style"]
+    }
+  ]
+}

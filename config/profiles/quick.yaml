@@ -1,0 +1,6 @@
+name: quick
+description: Minimal navigation for short, low-risk tasks.
+detailLevel: compact
+showProgress: false
+showVerification: true
+maxImmediateActions: 3

@@ -1,0 +1,28 @@
+{
+  "name": "adhd-mode",
+  "version": "0.1.0",
+  "description": "Task-aware, ADHD-friendly output for Codex",
+  "author": {
+    "name": "Sudarshan Kishor Chaudhari",
+    "url": "https://github.com/SUDARSHANCHAUDHARI"
+  },
+  "homepage": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode",
+  "repository": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode",
+  "license": "MIT",
+  "keywords": ["adhd", "accessibility", "productivity", "agent-skills"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "ADHDMode",
+    "shortDescription": "Task-aware, ADHD-friendly responses",
+    "longDescription": "Make AI work easier to start, follow, resume, and verify without removing required technical depth.",
+    "developerName": "Sudarshan Kishor Chaudhari",
+    "category": "Productivity",
+    "capabilities": ["Read"],
+    "websiteURL": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode",
+    "defaultPrompt": [
+      "Use ADHDMode to make this task easier to start and verify.",
+      "Use ADHDMode debug mode for this failure."
+    ],
+    "brandColor": "#7C3AED"
+  }
+}

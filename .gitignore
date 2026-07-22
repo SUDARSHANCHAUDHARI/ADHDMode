@@ -1,0 +1,6 @@
+node_modules/
+.DS_Store
+adhd-mode.config.json
+adhd-mode.config.json.bak-*
+evals/results/
+*.tgz

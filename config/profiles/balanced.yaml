@@ -1,0 +1,6 @@
+name: balanced
+description: Default balance of clarity, actionability, and technical depth.
+detailLevel: balanced
+showProgress: true
+showVerification: true
+maxImmediateActions: 5

@@ -1,0 +1,6 @@
+name: deep
+description: Detailed explanations and tradeoffs while preserving navigation.
+detailLevel: detailed
+showProgress: true
+showVerification: true
+maxImmediateActions: 5
