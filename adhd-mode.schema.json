@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SUDARSHANCHAUDHARI/ADHDMode/adhd-mode.schema.json",
+  "title": "ADHDMode configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "mode": {
+      "enum": ["auto", "quick", "execute", "debug", "explain", "decide", "resume"]
+    },
+    "profile": {
+      "enum": ["quick", "balanced", "guided", "deep"]
+    },
+    "detailLevel": {
+      "enum": ["compact", "balanced", "detailed"]
+    },
+    "showProgress": {"type": "boolean"},
+    "showVerification": {"type": "boolean"},
+    "maxImmediateActions": {"type": "integer", "minimum": 1, "maximum": 10},
+    "timeEstimates": {"enum": ["never", "grounded-only"]},
+    "language": {"type": "string", "minLength": 2},
+    "alwaysOn": {"type": "boolean"}
+  },
+  "required": [
+    "mode",
+    "profile",
+    "detailLevel",
+    "showProgress",
+    "showVerification",
+    "maxImmediateActions",
+    "timeEstimates",
+    "language",
+    "alwaysOn"
+  ]
+}
