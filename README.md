@@ -6,6 +6,8 @@ ADHDMode helps assistants produce work that is easier to start, follow, resume, 
 
 ADHDMode is a communication preference tool. It does not diagnose, treat, or prove ADHD.
 
+> **Repository access:** This repository is currently private. Remote installation commands work only for GitHub accounts that can access it. Make the repository public before announcing a public release.
+
 ## What changes
 
 Without ADHDMode:
@@ -47,13 +49,31 @@ claude plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
 claude plugin install adhd-mode@adhd-mode
 ```
 
-Then run `/adhd-mode`.
+Then run the namespaced skill:
 
-### Codex and other Agent Skills tools
+```text
+/adhd-mode:adhd-mode
+```
 
-Install or copy `skills/adhd-mode/` into a supported skills directory, then invoke `$adhd-mode` where explicit skill commands are supported.
+### Codex
 
-See [docs/install.md](docs/install.md) for platform-specific guidance.
+Add the repository marketplace:
+
+```bash
+codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
+```
+
+Install ADHDMode from the Plugins Directory in the ChatGPT desktop app, or copy `skills/adhd-mode/` into `.agents/skills/adhd-mode/` for repository-scoped use. Invoke it with `$adhd-mode`.
+
+### Gemini CLI
+
+```bash
+gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git
+```
+
+Restart Gemini CLI, then verify with `/extensions list` and `/skills list`.
+
+See [docs/install.md](docs/install.md) for complete platform-specific guidance.
 
 ## Local CLI
 
@@ -82,7 +102,7 @@ npm test
 npm run pack:check
 ```
 
-A single GitHub Actions workflow runs the same deterministic checks on pull requests and pushes to `main`.
+A single GitHub Actions workflow runs the same deterministic checks on pull requests only.
 
 ## Design rules
 
@@ -97,7 +117,7 @@ A single GitHub Actions workflow runs the same deterministic checks on pull requ
 
 ## Project status
 
-`v0.1.0` is the first production-ready skill release candidate. It includes the canonical policy, task modes, profiles, multi-agent metadata, configuration CLI, deterministic validation, and original evaluation cases.
+`v0.1.0` is the initial production-ready code release. It includes the canonical policy, task modes, profiles, multi-agent metadata, configuration CLI, deterministic validation, and original evaluation cases.
 
 ## License and inspiration
 
