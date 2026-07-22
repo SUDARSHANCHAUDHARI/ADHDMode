@@ -32,7 +32,7 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Verify release target
+      - name: Prepare exact release commit
         env:
           TARGET_SHA: 8ce9455f8c2e752cd51f1969962196706b13a2b8
         run: |
@@ -44,14 +44,18 @@ jobs:
           }
           git cat-file -e "$TARGET_SHA^{commit}"
           git show "$TARGET_SHA:docs/release-notes-v0.1.0.md" >/dev/null
+          git worktree add --detach /tmp/adhdmode-release "$TARGET_SHA"
 
       - name: Install dependencies
+        working-directory: /tmp/adhdmode-release
         run: npm ci
 
       - name: Run complete validation
+        working-directory: /tmp/adhdmode-release
         run: npm test
 
       - name: Inspect release package
+        working-directory: /tmp/adhdmode-release
         run: npm run pack:check
 
       - name: Create tag and GitHub release
@@ -93,7 +97,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release view v0.1.0 \
+          result="$(gh release view v0.1.0 \
             --repo "$GITHUB_REPOSITORY" \
             --json tagName,name,isDraft,isPrerelease,url \
-            --jq '.tagName == "v0.1.0" and .name == "ADHDMode v0.1.0" and (.isDraft | not) and (.isPrerelease | not)'
+            --jq '.tagName == "v0.1.0" and .name == "ADHDMode v0.1.0" and (.isDraft | not) and (.isPrerelease | not)')"
+          test "$result" = "true"
