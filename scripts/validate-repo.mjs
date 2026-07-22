@@ -1,0 +1,110 @@
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+
+const root = process.cwd();
+
+const requiredFiles = [
+  "README.md",
+  "LICENSE",
+  "INSPIRATIONS.md",
+  "adhd-mode.schema.json",
+  "config/default.json",
+  "skills/adhd-mode/SKILL.md",
+  "skills/adhd-mode/agents/openai.yaml",
+  "skills/adhd-mode/agents/gemini.toml",
+  ".claude-plugin/plugin.json",
+  ".claude-plugin/marketplace.json",
+  "hooks/hooks.json",
+  "hooks/session-start.js",
+  ".codex-plugin/plugin.json",
+  "gemini-extension.json",
+  "GEMINI.md",
+  "evals/cases.jsonl",
+];
+
+const errors = [];
+
+for (const file of requiredFiles) {
+  if (!fs.existsSync(path.join(root, file))) {
+    errors.push(`Missing required file: ${file}`);
+  }
+}
+
+const jsonFiles = [
+  "package.json",
+  "adhd-mode.schema.json",
+  "config/default.json",
+  ".claude-plugin/plugin.json",
+  ".claude-plugin/marketplace.json",
+  ".codex-plugin/plugin.json",
+  "gemini-extension.json",
+  "hooks/hooks.json",
+];
+
+for (const file of jsonFiles) {
+  try {
+    JSON.parse(fs.readFileSync(path.join(root, file), "utf8"));
+  } catch (error) {
+    errors.push(`Invalid JSON in ${file}: ${error.message}`);
+  }
+}
+
+const plugin = JSON.parse(
+  fs.readFileSync(path.join(root, ".claude-plugin/plugin.json"), "utf8"),
+);
+
+if ("hooks" in plugin) {
+  errors.push(
+    ".claude-plugin/plugin.json must not redeclare conventional hooks/hooks.json",
+  );
+}
+
+const skill = fs.readFileSync(
+  path.join(root, "skills/adhd-mode/SKILL.md"),
+  "utf8",
+);
+
+for (const phrase of [
+  "does not diagnose",
+  "Use time estimates only when grounded",
+  "Respect explicit output contracts",
+  "Repeated failed fixes",
+]) {
+  if (!skill.toLowerCase().includes(phrase.toLowerCase())) {
+    errors.push(`Canonical skill is missing required policy: ${phrase}`);
+  }
+}
+
+const config = JSON.parse(
+  fs.readFileSync(path.join(root, "config/default.json"), "utf8"),
+);
+
+const allowedModes = new Set([
+  "auto",
+  "quick",
+  "execute",
+  "debug",
+  "explain",
+  "decide",
+  "resume",
+]);
+
+if (!allowedModes.has(config.mode)) {
+  errors.push(`Unsupported default mode: ${config.mode}`);
+}
+
+if (
+  !Number.isInteger(config.maxImmediateActions) ||
+  config.maxImmediateActions < 1 ||
+  config.maxImmediateActions > 10
+) {
+  errors.push("maxImmediateActions must be an integer from 1 to 10");
+}
+
+if (errors.length > 0) {
+  console.error(errors.join("\n"));
+  process.exit(1);
+}
+
+console.log("Repository validation passed.");
