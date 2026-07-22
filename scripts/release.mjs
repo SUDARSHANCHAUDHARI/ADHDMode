@@ -31,7 +31,7 @@ export function ensureSupportedNode(version = process.versions.node) {
 }
 
 export function tagForVersion(version) {
-  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+  if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/.test(version)) {
     throw new Error(`Invalid package version: ${version}`);
   }
   return `v${version}`;
@@ -47,6 +47,21 @@ export function normalizeVisibility(value) {
 
 export function releaseTitle(version) {
   return `ADHDMode v${version}`;
+}
+
+export function remoteTagTarget(output, tag) {
+  const entries = String(output || '')
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [sha, ref] = line.split(/\s+/, 2);
+      return { sha, ref };
+    });
+
+  const peeled = entries.find((entry) => entry.ref === `refs/tags/${tag}^{}`);
+  const direct = entries.find((entry) => entry.ref === `refs/tags/${tag}`);
+  return peeled?.sha || direct?.sha || null;
 }
 
 function run(command, args, options = {}) {
@@ -82,7 +97,7 @@ function tryRun(command, args) {
 }
 
 function printHelp() {
-  console.log(`ADHDMode release helper\n\nUsage:\n  npm run release:check\n  npm run release:publish\n\nModes:\n  --check    Validate release readiness without changing Git or GitHub.\n  --publish  Create and push the version tag, then publish the GitHub release.\n\nSafety:\n  The default mode is --check. Publishing stops unless the repository is public,\n  the working tree is clean, the current branch is main, GitHub CLI is authenticated,\n  all tests pass, and the release notes file exists.`);
+  console.log(`ADHDMode release helper\n\nUsage:\n  npm run release:check\n  npm run release:publish\n\nModes:\n  --check    Validate release readiness without changing Git or GitHub.\n  --publish  Create and push the version tag, then publish the GitHub release.\n\nSafety:\n  The default mode is --check. Publishing stops unless the repository is public,\n  the working tree is clean, the current branch is main, GitHub CLI is authenticated,\n  all tests pass, existing tags match the current commit, and release notes exist.`);
 }
 
 function readPackage() {
@@ -121,7 +136,22 @@ function inspectRepository(version) {
     throw new Error(`Local tag ${tag} points to ${localTag.stdout}, not current HEAD ${head}.`);
   }
 
-  const remoteTag = tryRun('git', ['ls-remote', '--exit-code', '--tags', 'origin', `refs/tags/${tag}`]);
+  const remoteTag = tryRun('git', [
+    'ls-remote',
+    '--exit-code',
+    '--tags',
+    'origin',
+    `refs/tags/${tag}`,
+    `refs/tags/${tag}^{}`,
+  ]);
+  const remoteTarget = remoteTag.ok ? remoteTagTarget(remoteTag.stdout, tag) : null;
+  if (remoteTag.ok && !remoteTarget) {
+    throw new Error(`Remote tag ${tag} was reported but its target could not be parsed.`);
+  }
+  if (remoteTarget && remoteTarget !== head) {
+    throw new Error(`Remote tag ${tag} points to ${remoteTarget}, not current HEAD ${head}.`);
+  }
+
   const release = tryRun('gh', ['release', 'view', tag, '--json', 'tagName,url']);
 
   return {
@@ -131,7 +161,7 @@ function inspectRepository(version) {
     tag,
     notesRelative,
     localTagExists: localTag.ok,
-    remoteTagExists: remoteTag.ok,
+    remoteTagExists: Boolean(remoteTarget),
     releaseExists: release.ok,
     releaseUrl: release.ok ? JSON.parse(release.stdout).url : null,
   };
