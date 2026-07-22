@@ -17,9 +17,11 @@ ADHDMode v0.1.0 is the first production-ready code release of the task-aware res
 ## Installation identifiers
 
 - Claude Code skill: `/adhd-mode:adhd-mode`
-- Codex skill: `$adhd-mode`
+- Codex Agent Skill: `$adhd-mode`
 - Gemini CLI skill name: `adhd-mode`
 - Repository: `SUDARSHANCHAUDHARI/ADHDMode`
+
+Codex support uses the standard Agent Skill directories under `.agents/skills/`. ADHDMode does not publish a Codex marketplace entry in v0.1.0 because the official repository-marketplace layout requires a second packaged plugin directory. Keeping one canonical skill prevents policy drift.
 
 ## Safety and scope
 
