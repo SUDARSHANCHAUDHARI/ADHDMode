@@ -30,7 +30,7 @@
     "gemini-extension.json"
   ],
   "scripts": {
-    "test": "node scripts/validate-cases.mjs",
+    "test": "node --test tests/install-contracts.test.mjs",
     "validate": "node scripts/validate-repo.mjs",
     "validate:cases": "node scripts/validate-cases.mjs",
     "test:unit": "node --test tests/*.test.mjs",
