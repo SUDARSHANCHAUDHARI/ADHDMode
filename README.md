@@ -107,6 +107,17 @@ npm run pack:check
 
 A single GitHub Actions workflow runs the same deterministic checks on pull requests only.
 
+## Publish a release
+
+Release publishing is a local, explicit maintainer action. It is not automated by GitHub Actions.
+
+```bash
+npm run release:check
+npm run release:publish
+```
+
+`release:check` is non-mutating. `release:publish` reruns every check before creating the version tag and GitHub release. See [docs/public-release.md](docs/public-release.md) for prerequisites and safety behavior.
+
 ## Design rules
 
 1. Put the useful result where it can be seen immediately.

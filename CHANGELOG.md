@@ -11,7 +11,8 @@
 - Added exact Gemini extension and skill installation guidance.
 - Added opt-in Claude Code session persistence isolated from other plugin systems.
 - Added a JSON configuration schema and safe local CLI lifecycle.
-- Added deterministic repository, configuration, CLI, hook, packaging, installation-contract, and evaluation checks.
+- Added deterministic repository, configuration, CLI, hook, packaging, installation-contract, release-helper, and evaluation checks.
 - Added 42 original evaluation cases across low, medium, and high-risk tasks.
 - Added one minimal pull-request validation workflow.
+- Added an explicit local release helper with non-mutating check mode and guarded publish mode.
 - Documented that public remote installation requires the GitHub repository to be public.

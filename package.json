@@ -33,7 +33,9 @@
     "validate": "node scripts/validate-repo.mjs",
     "validate:cases": "node scripts/validate-cases.mjs",
     "test:unit": "node --test tests/*.test.mjs",
-    "pack:check": "npm pack --dry-run --json"
+    "pack:check": "npm pack --dry-run --json",
+    "release:check": "node scripts/release.mjs --check",
+    "release:publish": "node scripts/release.mjs --publish"
   },
   "engines": {
     "node": ">=20"
