@@ -1,0 +1,15 @@
+{
+  "name": "adhd-mode",
+  "owner": {
+    "name": "Sudarshan Kishor Chaudhari",
+    "url": "https://github.com/SUDARSHANCHAUDHARI"
+  },
+  "plugins": [
+    {
+      "name": "adhd-mode",
+      "source": "./",
+      "description": "Task-aware, ADHD-friendly output for Claude Code",
+      "version": "0.1.0"
+    }
+  ]
+}
