@@ -1,0 +1,7 @@
+name: deep
+description: Full explanation and decision context for complex or high-risk work.
+defaults:
+  detailLevel: detailed
+  showProgress: true
+  showVerification: true
+  maxImmediateActions: 5
