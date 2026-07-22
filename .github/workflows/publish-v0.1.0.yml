@@ -1,0 +1,96 @@
+name: Publish v0.1.0
+
+on:
+  push:
+    branches:
+      - agent/publish-v0.1.0
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-v0.1.0
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Validate and publish
+    if: github.repository == 'SUDARSHANCHAUDHARI/ADHDMode' && github.event.repository.private == false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Verify release target
+        env:
+          TARGET_SHA: 8ce9455f8c2e752cd51f1969962196706b13a2b8
+        run: |
+          set -euo pipefail
+          main_sha="$(git ls-remote origin refs/heads/main | awk '{print $1}')"
+          test "$main_sha" = "$TARGET_SHA" || {
+            echo "main moved: expected $TARGET_SHA, found $main_sha" >&2
+            exit 1
+          }
+          git cat-file -e "$TARGET_SHA^{commit}"
+          git show "$TARGET_SHA:docs/release-notes-v0.1.0.md" >/dev/null
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run complete validation
+        run: npm test
+
+      - name: Inspect release package
+        run: npm run pack:check
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: 8ce9455f8c2e752cd51f1969962196706b13a2b8
+          TAG: v0.1.0
+        run: |
+          set -euo pipefail
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            git fetch --force origin "refs/tags/$TAG:refs/tags/$TAG"
+            existing_sha="$(git rev-list -n 1 "$TAG")"
+            test "$existing_sha" = "$TARGET_SHA" || {
+              echo "$TAG already points to $existing_sha instead of $TARGET_SHA" >&2
+              exit 1
+            }
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag -a "$TAG" "$TARGET_SHA" -m "ADHDMode v0.1.0"
+            git push origin "refs/tags/$TAG"
+          fi
+
+          git show "$TARGET_SHA:docs/release-notes-v0.1.0.md" > /tmp/adhdmode-release-notes.md
+
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "GitHub release $TAG already exists."
+          else
+            gh release create "$TAG" \
+              --repo "$GITHUB_REPOSITORY" \
+              --verify-tag \
+              --title "ADHDMode v0.1.0" \
+              --notes-file /tmp/adhdmode-release-notes.md
+          fi
+
+      - name: Verify published release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release view v0.1.0 \
+            --repo "$GITHUB_REPOSITORY" \
+            --json tagName,name,isDraft,isPrerelease,url \
+            --jq '.tagName == "v0.1.0" and .name == "ADHDMode v0.1.0" and (.isDraft | not) and (.isPrerelease | not)'
