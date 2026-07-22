@@ -1,0 +1,7 @@
+interface:
+  display_name: "ADHD Mode"
+  short_description: "Task-aware, ADHD-friendly responses"
+  default_prompt: "Use $adhd-mode to make the response easy to start, follow, resume, and verify."
+
+policy:
+  allow_implicit_invocation: true
