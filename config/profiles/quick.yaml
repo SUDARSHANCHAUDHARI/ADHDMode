@@ -1,0 +1,7 @@
+name: quick
+description: Minimal structure for direct, low-risk requests.
+defaults:
+  detailLevel: compact
+  showProgress: false
+  showVerification: false
+  maxImmediateActions: 3
