@@ -1,6 +1,7 @@
-const fs = require("fs");
-const os = require("os");
-const path = require("path");
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const claudeDir =
   process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), ".claude");
@@ -11,8 +12,11 @@ if (!fs.existsSync(flagPath)) {
 }
 
 try {
+  const currentDir = path.dirname(fileURLToPath(import.meta.url));
+  const pluginRoot =
+    process.env.CLAUDE_PLUGIN_ROOT || path.resolve(currentDir, "..");
   const skillPath = path.join(
-    process.env.CLAUDE_PLUGIN_ROOT || path.join(__dirname, ".."),
+    pluginRoot,
     "skills",
     "adhd-mode",
     "SKILL.md",
