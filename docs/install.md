@@ -1,67 +1,163 @@
 # Installation
 
-ADHDMode keeps one canonical policy at `skills/adhd-mode/SKILL.md`. Agent-specific files only point to or package that policy.
+ADHDMode keeps one canonical policy at `skills/adhd-mode/SKILL.md`. Agent-specific manifests package or point to that policy.
+
+> **Private repository:** Remote installation requires GitHub access to `SUDARSHANCHAUDHARI/ADHDMode`. Make the repository public before sharing these commands as a public installation flow.
 
 ## Claude Code
+
+### Install from the marketplace
 
 ```bash
 claude plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
 claude plugin install adhd-mode@adhd-mode
 ```
 
-Start a new session and run `/adhd-mode`.
+Claude Code namespaces plugin skills with the plugin name. Start a new session and run:
 
-Optional always-on mode:
+```text
+/adhd-mode:adhd-mode
+```
+
+### Validate a local checkout
+
+```bash
+claude plugin validate . --strict
+claude --plugin-dir .
+```
+
+In the test session, run `/adhd-mode:adhd-mode` and confirm the skill loads.
+
+### Optional always-on mode
+
+From a local checkout:
 
 ```bash
 node bin/adhd-mode.mjs enable
-```
-
-Disable it without uninstalling:
-
-```bash
 node bin/adhd-mode.mjs disable
 ```
 
-The Claude startup hook is stored under `claude-hooks/` and is registered only by the Claude plugin manifest. It does not live in the root conventional hook directory, so other plugin systems do not load it accidentally.
+The CLI creates or removes `~/.claude/.adhd-mode-always`. You can manage the marker directly when the repository CLI is not available.
+
+macOS or Linux:
+
+```bash
+mkdir -p ~/.claude
+touch ~/.claude/.adhd-mode-always
+rm -f ~/.claude/.adhd-mode-always
+```
+
+Windows PowerShell:
+
+```powershell
+$dir = Join-Path $HOME ".claude"
+New-Item -ItemType Directory -Force -Path $dir | Out-Null
+New-Item -ItemType File -Force -Path (Join-Path $dir ".adhd-mode-always") | Out-Null
+Remove-Item -Force -ErrorAction SilentlyContinue (Join-Path $dir ".adhd-mode-always")
+```
+
+The Claude startup hook is stored under `claude-hooks/` and is registered only by the Claude plugin manifest. Codex does not load it.
 
 ## OpenAI Codex
 
-The repository contains a standard Agent Skill in `skills/adhd-mode/` and Codex presentation metadata in `skills/adhd-mode/agents/openai.yaml`.
+### Plugin marketplace
 
-Use the plugin marketplace flow supported by your Codex version, or copy `skills/adhd-mode/` into a discovered user or project skills directory. Invoke `$adhd-mode` when explicit invocation is available.
+Add the repository marketplace:
+
+```bash
+codex plugin marketplace add SUDARSHANCHAUDHARI/ADHDMode
+```
+
+Restart the ChatGPT desktop app, open the Plugins Directory, select the ADHDMode marketplace, and install the plugin.
+
+### Direct Agent Skill
+
+For a repository-scoped skill, copy the canonical directory to:
+
+```text
+$REPO_ROOT/.agents/skills/adhd-mode/
+```
+
+For a user-scoped skill, copy it to:
+
+```text
+$HOME/.agents/skills/adhd-mode/
+```
+
+Codex discovers the `SKILL.md` automatically. Invoke it explicitly with:
+
+```text
+$adhd-mode
+```
+
+Use `/skills` to confirm that Codex discovered the skill.
 
 ## Gemini CLI
 
-Gemini CLI can discover Agent Skills. Install this repository as an extension when your version supports bundled skills, or copy `skills/adhd-mode/` into a discovered skills directory.
+### Install as an extension
 
-The extension manifest does not inject a global `GEMINI.md`; the skill stays explicit and portable.
+```bash
+gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git
+```
+
+Restart Gemini CLI, then verify:
+
+```text
+/extensions list
+/skills list
+```
+
+Gemini CLI automatically discovers the skill bundled under `skills/adhd-mode/`.
+
+### Install only the skill
+
+```bash
+gemini skills install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git --path skills/adhd-mode --consent
+```
+
+Use `/skills reload` after changing a linked or copied skill.
 
 ## GitHub Copilot
 
-Copy the canonical skill directory into one of Copilot's supported skill locations, such as:
+Copy the canonical skill directory into one of Copilot's project skill locations:
 
 ```text
 .github/skills/adhd-mode/
 .agents/skills/adhd-mode/
 ```
 
-For always-on project instructions, adapt `adapters/copilot/copilot-instructions.md` into `.github/copilot-instructions.md`.
+For a personal skill, use:
+
+```text
+~/.copilot/skills/adhd-mode/
+~/.agents/skills/adhd-mode/
+```
+
+For always-on repository guidance, adapt `adapters/copilot/copilot-instructions.md` into `.github/copilot-instructions.md`.
 
 ## Cursor
 
-Copy `skills/adhd-mode/` into `.cursor/skills/adhd-mode/` or the current user-level Cursor skills location. Use a real copy rather than a symlink.
+Copy `skills/adhd-mode/` into:
+
+```text
+.cursor/skills/adhd-mode/
+```
+
+For user-level installation, use the current Cursor user skills directory. Use a real directory copy rather than a symlink so clones and ZIP downloads remain portable.
 
 ## Generic agents
 
-Copy `skills/adhd-mode/` into the tool's Agent Skills directory. For agents that only read `AGENTS.md`, use `adapters/generic/AGENTS.md` as the project pointer.
+Copy `skills/adhd-mode/` into the tool's Agent Skills directory. For tools that only read `AGENTS.md`, use `adapters/generic/AGENTS.md` as the project pointer.
 
-## Verify
+## Repository verification
 
 From the repository root:
 
 ```bash
 npm ci
 npm test
+npm run pack:check
 node bin/adhd-mode.mjs doctor
 ```
+
+The deterministic test suite verifies manifest paths, documented commands, skill-copy layouts, configuration behavior, hook behavior, and package contents. It does not replace a real launch test in each installed agent.
