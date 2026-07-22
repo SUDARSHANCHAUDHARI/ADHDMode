@@ -1,0 +1,8 @@
+{
+  "name": "adhd-mode",
+  "version": "0.1.0",
+  "description": "Task-aware, ADHD-friendly output for Codex",
+  "skills": [
+    "skills/adhd-mode"
+  ]
+}
