@@ -1,0 +1,6 @@
+{
+  "name": "adhd-mode",
+  "version": "0.1.0",
+  "description": "Task-aware, ADHD-friendly output for Gemini CLI",
+  "contextFileName": "GEMINI.md"
+}
