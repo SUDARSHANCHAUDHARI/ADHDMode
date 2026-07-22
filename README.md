@@ -4,14 +4,14 @@
 
 ### Task-aware, ADHD-friendly output for AI coding agents
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-43853d.svg)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg)](#project-status)
 
 **Clear next actions. Visible progress. Easier resumption.**
 
-[Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
+[Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Release](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -21,7 +21,7 @@ ADHDMode is a configurable response layer for AI coding agents. It helps assista
 
 It is a communication and workflow preference tool. It does **not** diagnose, treat, or prove ADHD.
 
-> **Repository access:** This repository is currently private. Remote installation commands work only for GitHub accounts that can access it. Make the repository public before announcing a public release.
+> **Public release:** ADHDMode `v0.1.0` is available from the [GitHub Releases page](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0). The repository is public and the remote installation commands below are ready to use.
 
 ## Why ADHDMode
 
@@ -269,9 +269,9 @@ Security issues should be reported according to [SECURITY.md](SECURITY.md).
 
 ## Project status
 
-`v0.1.0` is the initial production-ready code release. The policy, modes, profiles, configuration CLI, multi-agent adapters, evaluation cases, package checks, and guarded local release process are complete.
+`v0.1.0` is the initial production-ready release and is now publicly available. The policy, modes, profiles, configuration CLI, multi-agent adapters, evaluation cases, package checks, and guarded release process are complete.
 
-The repository must be made public and the prepared release must be published before public remote installation is announced.
+The repository is public, the release tag is published, and the documented remote installation paths are ready for use.
 
 ## Contributing
 
