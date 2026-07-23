@@ -32,7 +32,7 @@ test('quick start covers supported agents and exact activation contracts', () =>
     '/skills',
     '@adhd-mode',
     '$adhd-mode',
-    'legacy-compatible',
+    'unverified legacy syntax',
     'gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git',
     '/extensions list',
     '.github/skills/adhd-mode',
