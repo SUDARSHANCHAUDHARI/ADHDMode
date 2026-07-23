@@ -104,6 +104,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/codex-project/.agents/skills"
           cp -R skills/adhd-mode "$RUNNER_TEMP/codex-project/.agents/skills/adhd-mode"
           run_check "OpenAI Codex CLI startup help" codex --help
+          run_shell_check "OpenAI Codex project diagnostics" "cd '$RUNNER_TEMP/codex-project' && codex doctor"
           run_shell_check "OpenAI Codex authenticated activation probe" "cd '$RUNNER_TEMP/codex-project' && timeout 30s codex exec --skip-git-repo-check --json '@adhd-mode Use ADHDMode quick mode. Reply only READY.'"
 
           # Gemini CLI: extension validation, remote install, extension listing, skill listing, and uninstall are credential-free.
@@ -116,13 +117,17 @@ jobs:
           run_check "Gemini ADHDMode extension removal" gemini extensions uninstall adhd-mode
           run_check "Gemini post-removal extension listing" gemini extensions list
 
-          # GitHub Copilot CLI: the binary can be installed and started, but skill use requires Copilot authentication.
+          # GitHub Copilot CLI: skill inventory is credential-free; model use still requires authentication.
           run_check "GitHub Copilot CLI package installation" npm install -g @github/copilot@latest
           run_check "GitHub Copilot CLI version" copilot --version
           mkdir -p "$RUNNER_TEMP/copilot-project/.github/skills"
           cp -R skills/adhd-mode "$RUNNER_TEMP/copilot-project/.github/skills/adhd-mode"
           run_check "GitHub Copilot CLI startup help" copilot help
-          run_shell_check "GitHub Copilot authenticated skill probe" "cd '$RUNNER_TEMP/copilot-project' && timeout 30s copilot -sp 'Use ADHDMode quick mode. Reply only READY.'"
+          run_shell_check "GitHub Copilot project skill listing" "cd '$RUNNER_TEMP/copilot-project' && copilot skill list"
+          run_shell_check "GitHub Copilot project skill inventory JSON" "cd '$RUNNER_TEMP/copilot-project' && copilot plugins list --kind skill --json"
+          run_shell_check "GitHub Copilot authenticated skill probe" "cd '$RUNNER_TEMP/copilot-project' && timeout 30s copilot -sp 'Use the /adhd-mode skill in quick mode. Reply only READY.'"
+          rm -rf "$RUNNER_TEMP/copilot-project/.github/skills/adhd-mode"
+          run_shell_check "GitHub Copilot post-removal skill listing" "cd '$RUNNER_TEMP/copilot-project' && copilot skill list"
 
           cat >> "$report" <<'REPORT'
 
