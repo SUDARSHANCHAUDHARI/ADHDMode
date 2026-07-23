@@ -2,7 +2,7 @@
 
 ADHDMode keeps one canonical policy at `skills/adhd-mode/SKILL.md`. Agent-specific manifests package or point to that policy.
 
-> **Private repository:** Remote installation requires GitHub access to `SUDARSHANCHAUDHARI/ADHDMode`. Make the repository public before sharing these commands as a public installation flow.
+> **Public release:** ADHDMode `v0.1.0` is publicly available. The remote installation commands below can be used without private repository access.
 
 ## Claude Code
 
@@ -172,6 +172,25 @@ For user-level installation, use the current Cursor user skills directory. Use a
 
 Copy `skills/adhd-mode/` into the tool's Agent Skills directory. For tools that only read `AGENTS.md`, use `adapters/generic/AGENTS.md` as the project pointer.
 
+## Automated clean-install verification
+
+From the repository root:
+
+```bash
+npm ci
+npm run verify:install
+```
+
+The verifier validates the agent manifests, copies the canonical skill into clean temporary Codex, Gemini CLI, GitHub Copilot, and Cursor project layouts, and confirms every copied file exactly matches the source. It removes all temporary directories after the check.
+
+For a machine-readable report:
+
+```bash
+node scripts/verify-install.mjs --json
+```
+
+This verifies installation contracts and filesystem layouts. It does not replace real discovery and activation testing inside each agent. Use [Agent verification](agent-verification.md) for the launch matrix, standard prompts, and failure-report template.
+
 ## Repository verification
 
 From the repository root:
@@ -179,8 +198,9 @@ From the repository root:
 ```bash
 npm ci
 npm test
+npm run verify:install
 npm run pack:check
 node bin/adhd-mode.mjs doctor
 ```
 
-The deterministic test suite verifies manifest paths, documented commands, skill-copy layouts, configuration behavior, hook behavior, and package contents. It does not replace a real launch test in each installed agent.
+The deterministic test suite verifies manifest paths, documented commands, skill-copy layouts, configuration behavior, hook behavior, and package contents. Real agent launch results must be recorded separately using [Agent verification](agent-verification.md).
