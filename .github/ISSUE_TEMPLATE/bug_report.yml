@@ -1,0 +1,116 @@
+name: Bug report
+description: Report a reproducible ADHDMode installation, discovery, behavior, or compatibility problem.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Include exact commands and output so the issue can be reproduced without guessing.
+        For security vulnerabilities, stop here and use the private security reporting link.
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Affected agent
+      options:
+        - Claude Code
+        - OpenAI Codex
+        - Gemini CLI
+        - GitHub Copilot
+        - Cursor
+        - Generic Agent Skills consumer
+        - Repository CLI or validation tooling
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: agent_version
+    attributes:
+      label: Agent or tool version
+      placeholder: Example: Claude Code 1.2.3 or Node.js 22.4.0
+    validations:
+      required: true
+  - type: input
+    id: operating_system
+    attributes:
+      label: Operating system
+      placeholder: Example: macOS 15.5, Windows 11 24H2, Ubuntu 24.04
+    validations:
+      required: true
+  - type: input
+    id: adhdmode_version
+    attributes:
+      label: ADHDMode version or commit
+      placeholder: Example: v0.1.0 or a full commit SHA
+    validations:
+      required: true
+  - type: dropdown
+    id: problem_area
+    attributes:
+      label: Problem area
+      options:
+        - Installation
+        - Skill discovery
+        - Activation command
+        - Response behavior
+        - Configuration CLI
+        - Claude Code hook
+        - Clean-install verifier
+        - Packaging or release tooling
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: installation_method
+    attributes:
+      label: Installation method
+      description: Paste the exact commands or file-copy path used.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Provide the smallest reliable sequence that reproduces the problem.
+      placeholder: |
+        1. Install...
+        2. Restart...
+        3. Run...
+        4. Observe...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Logs, screenshots, or exact output
+      description: Remove secrets, personal data, and private repository information before posting.
+      render: text
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional context
+      description: Include configuration changes, related issues, or whether the problem reproduces in a clean profile.
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I tested the documented installation path or explained why I could not.
+          required: true
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: This report does not contain credentials, tokens, or other secrets.
+          required: true
