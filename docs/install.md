@@ -113,11 +113,13 @@ Restart the Codex session and use `/skills` to confirm discovery. Current Codex 
 @adhd-mode
 ```
 
-Codex still recognizes the legacy-compatible form:
+A legacy `$` mention parser exists in Codex source, but authenticated `v0.1.1` testing did not show observable Agent Skill loading for:
 
 ```text
 $adhd-mode
 ```
+
+Do not treat this as a verified activation path. Use `@adhd-mode` until [issue #23](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/issues/23) is resolved with real skill-load evidence.
 
 The optional `.codex-plugin/plugin.json` remains distribution metadata for environments that can load a local plugin directory. It declares only `./skills/` and does not include Claude hooks.
 

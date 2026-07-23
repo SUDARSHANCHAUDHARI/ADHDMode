@@ -46,7 +46,7 @@ Restart Codex, confirm discovery with `/skills`, and invoke using the current Me
 @adhd-mode
 ```
 
-The legacy-compatible `$adhd-mode` form remains available in Codex.
+Authenticated `v0.1.1` testing did not show `SKILL.md` loading for `$adhd-mode`. Treat it as unverified legacy syntax and use `@adhd-mode` as the verified activation path.
 
 ### Gemini CLI
 

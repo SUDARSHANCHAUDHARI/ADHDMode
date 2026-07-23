@@ -35,7 +35,7 @@ Use ADHDMode debug mode.
 My Playwright checkout test fails because the Pay button cannot be found. Separate the evidence, likely cause, fix, and verification steps.
 ```
 
-Claude Code activates the installed skill with `/adhd-mode:adhd-mode`. Codex confirms discovery with `/skills` and invokes it with `@adhd-mode`; `$adhd-mode` remains a legacy-compatible fallback. Other supported agents use the installation and discovery paths documented below.
+Claude Code activates the installed skill with `/adhd-mode:adhd-mode`. Codex confirms discovery with `/skills` and invokes it with `@adhd-mode`. Authenticated `v0.1.1` testing did not show `SKILL.md` loading for `$adhd-mode`, so treat it as unverified legacy syntax rather than a supported fallback. Other supported agents use the installation and discovery paths documented below.
 
 See [Mode examples](docs/examples.md) for `auto`, `quick`, `execute`, `debug`, `explain`, `decide`, and `resume` output patterns.
 
@@ -120,7 +120,7 @@ With ADHDMode:
 | Agent | Distribution method | Activation or discovery |
 | --- | --- | --- |
 | Claude Code | Plugin marketplace or local plugin checkout | `/adhd-mode:adhd-mode` |
-| OpenAI Codex | Standard Agent Skill directory | `/skills`, then `@adhd-mode` (`$adhd-mode` fallback) |
+| OpenAI Codex | Standard Agent Skill directory | `/skills`, then verified `@adhd-mode`; `$adhd-mode` is unverified legacy syntax |
 | Gemini CLI | Extension or direct skill installation | `/extensions list` and `/skills list` |
 | GitHub Copilot | Project or personal Agent Skill directory | Automatic skill discovery |
 | Cursor | Project or user skill directory | Automatic skill discovery |
@@ -156,7 +156,7 @@ Restart the session, confirm discovery with `/skills`, and invoke the skill usin
 @adhd-mode
 ```
 
-Codex still recognizes `$adhd-mode` through its legacy-compatible mention parser.
+Codex source contains a legacy `$` mention parser, but authenticated `v0.1.1` testing did not produce observable `SKILL.md` loading for `$adhd-mode`. Use `@adhd-mode` as the verified activation path and track the legacy behavior in [issue #23](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/issues/23).
 
 ADHDMode uses the standard Agent Skill path for Codex. It does not publish an unsupported repository marketplace entry or maintain a second copy of the complete policy.
 
