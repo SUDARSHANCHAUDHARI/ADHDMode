@@ -19,7 +19,9 @@ test('Codex guidance distinguishes verified activation from legacy syntax', () =
 
   assert.match(readme, /unverified legacy syntax/);
   assert.match(readme, /observable `SKILL\.md` loading/);
+  assert.match(readme, /issues\/23/);
   assert.match(install, /Do not treat this as a verified activation path/);
+  assert.match(install, /issues\/23/);
   assert.match(quickstart, /use `@adhd-mode` as the verified activation path/);
   assert.match(verification, /test `\$adhd-mode` separately as unverified legacy syntax/);
   assert.doesNotMatch(readme, /legacy-compatible fallback/);
