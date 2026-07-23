@@ -58,6 +58,7 @@ jobs:
           set -euo pipefail
           tag='v0.1.1'
           release_dir='/tmp/adhdmode-release'
+          release_api="repos/$GITHUB_REPOSITORY/releases/tags/$tag"
 
           if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
             git fetch origin "refs/tags/$tag:refs/tags/$tag"
@@ -74,21 +75,26 @@ jobs:
             git -C "$release_dir" push origin "$tag"
           fi
 
-          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json tagName,url,isDraft,isPrerelease >/tmp/release.json 2>/dev/null; then
-            node - <<'NODE'
-            const fs = require('node:fs');
-            const release = JSON.parse(fs.readFileSync('/tmp/release.json', 'utf8'));
-            if (release.tagName !== 'v0.1.1' || release.isDraft || release.isPrerelease) {
-              throw new Error(`Unexpected existing release state: ${JSON.stringify(release)}`);
-            }
-            console.log(`Release already published: ${release.url}`);
-            NODE
-          else
+          if ! gh api \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            "$release_api" >/tmp/release.json 2>/dev/null; then
             gh release create "$tag" \
               --repo "$GITHUB_REPOSITORY" \
               --verify-tag \
               --title 'ADHDMode v0.1.1' \
               --notes-file "$release_dir/docs/release-notes-v0.1.1.md"
+            gh api \
+              -H 'Accept: application/vnd.github+json' \
+              -H 'X-GitHub-Api-Version: 2026-03-10' \
+              "$release_api" >/tmp/release.json
           fi
 
-          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json tagName,url,isDraft,isPrerelease
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const release = JSON.parse(fs.readFileSync('/tmp/release.json', 'utf8'));
+          if (release.tag_name !== 'v0.1.1' || release.draft || release.prerelease) {
+            throw new Error(`Unexpected release state: ${JSON.stringify(release)}`);
+          }
+          console.log(`Release published: ${release.html_url}`);
+          NODE
