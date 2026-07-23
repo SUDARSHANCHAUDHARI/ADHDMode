@@ -1,0 +1,46 @@
+name: Sync PR 25 with current main
+
+on:
+  pull_request:
+    branches: [main]
+    types: [synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.head_ref == 'fix/quick-mode-state-awareness'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out quick-mode branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Merge current main and remove sync workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin main
+          git merge --no-edit origin/main
+          rm .github/workflows/sync-pr25-main.yml
+          git add .github/workflows/sync-pr25-main.yml
+          git commit --amend --no-edit
+
+      - name: Validate synchronized branch
+        run: |
+          npm ci
+          npm test
+          npm run pack:check
+
+      - name: Push synchronized branch
+        run: git push origin HEAD:${{ github.head_ref }}
