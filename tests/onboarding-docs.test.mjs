@@ -47,15 +47,19 @@ test('quick start covers supported agents and exact activation contracts', () =>
 test('quick start documents every mode and presentation profile', () => {
   const quickstart = read('docs/quickstart.md');
 
-  for (const mode of modes) assert.match(quickstart, new RegExp(`\\| \\`${mode}\\` \\|`));
-  for (const profile of profiles) assert.match(quickstart, new RegExp(`\\| \\`${profile}\\` \\|`));
+  for (const mode of modes) {
+    assert.ok(quickstart.includes('| `' + mode + '` |'), `quick start is missing mode ${mode}`);
+  }
+  for (const profile of profiles) {
+    assert.ok(quickstart.includes('| `' + profile + '` |'), `quick start is missing profile ${profile}`);
+  }
 });
 
 test('examples cover every response mode with evidence and verification boundaries', () => {
   const examples = read('docs/examples.md');
 
   for (const mode of modes) {
-    assert.match(examples, new RegExp(`## \\`${mode}\\``));
+    assert.ok(examples.includes('## `' + mode + '`'), `examples are missing mode ${mode}`);
   }
 
   for (const contract of [
