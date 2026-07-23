@@ -10,16 +10,29 @@ const readJson = (file) => JSON.parse(read(file));
 
 const repositoryUrl = 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git';
 
-test('Claude marketplace and plugin use current install contracts', () => {
+test('distribution manifests use the current package version and install contracts', () => {
+  const pkg = readJson('package.json');
+  const lock = readJson('package-lock.json');
   const marketplace = readJson('.claude-plugin/marketplace.json');
-  const plugin = readJson('.claude-plugin/plugin.json');
+  const claudePlugin = readJson('.claude-plugin/plugin.json');
+  const codexPlugin = readJson('.codex-plugin/plugin.json');
+  const geminiExtension = readJson('gemini-extension.json');
 
+  assert.equal(lock.version, pkg.version);
+  assert.equal(lock.packages[''].version, pkg.version);
   assert.equal(marketplace.$schema, 'https://json.schemastore.org/claude-code-marketplace.json');
-  assert.equal(marketplace.version, '0.1.0');
+  assert.equal(marketplace.version, pkg.version);
+  assert.equal(marketplace.plugins[0].version, pkg.version);
   assert.equal(marketplace.plugins[0].source, './');
-  assert.equal(plugin.$schema, 'https://json.schemastore.org/claude-code-plugin-manifest.json');
-  assert.equal(plugin.displayName, 'ADHDMode');
-  assert.equal(plugin.hooks, './claude-hooks/hooks.json');
+  assert.equal(claudePlugin.$schema, 'https://json.schemastore.org/claude-code-plugin-manifest.json');
+  assert.equal(claudePlugin.version, pkg.version);
+  assert.equal(claudePlugin.displayName, 'ADHDMode');
+  assert.equal(claudePlugin.hooks, './claude-hooks/hooks.json');
+  assert.equal(codexPlugin.version, pkg.version);
+  assert.equal(geminiExtension.version, pkg.version);
+  assert.ok(read('README.md').includes(`/releases/tag/v${pkg.version}`));
+  assert.ok(read('CHANGELOG.md').includes(`## ${pkg.version}`));
+  assert.equal(fs.existsSync(path.join(root, `docs/release-notes-v${pkg.version}.md`)), true);
 });
 
 test('Codex distribution uses one canonical Agent Skill', () => {

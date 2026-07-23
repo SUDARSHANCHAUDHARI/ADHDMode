@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.1
+
+- Added a deterministic clean-install verifier with human-readable and JSON output.
+- Added real-agent verification guidance and evidence-based tracking.
+- Added structured bug, feature, verification, and pull-request templates.
+- Added a five-minute quick start and examples for all response modes.
+- Updated Codex guidance for stable Mentions V2 with `@adhd-mode` as the default and `$adhd-mode` as the compatibility fallback.
+- Strengthened version and installation contracts without changing the canonical ADHDMode response policy.
+
 ## 0.1.0
 
 - Added the original ADHDMode response policy.

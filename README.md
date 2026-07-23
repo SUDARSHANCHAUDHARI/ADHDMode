@@ -4,14 +4,14 @@
 
 ### Task-aware, ADHD-friendly output for AI coding agents
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0)
+[![Version](https://img.shields.io/badge/version-0.1.1-blue.svg)](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-43853d.svg)](package.json)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg)](#project-status)
 
 **Clear next actions. Visible progress. Easier resumption.**
 
-[Quick start](docs/quickstart.md) · [Examples](docs/examples.md) · [Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Release](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
+[Quick start](docs/quickstart.md) · [Examples](docs/examples.md) · [Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Release](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -21,7 +21,7 @@ ADHDMode is a configurable response layer for AI coding agents. It helps assista
 
 It is a communication and workflow preference tool. It does **not** diagnose, treat, or prove ADHD.
 
-> **Public release:** ADHDMode `v0.1.0` is available from the [GitHub Releases page](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0). The repository is public and the remote installation commands below are ready to use.
+> **Public release:** ADHDMode `v0.1.1` is available from the [GitHub Releases page](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1). The repository is public and the remote installation commands below are ready to use.
 
 ## Start in five minutes
 
@@ -294,12 +294,13 @@ Security issues should be reported according to [SECURITY.md](SECURITY.md).
 - [Evaluation strategy](docs/evaluations.md)
 - [Release checklist](docs/release-checklist.md)
 - [Public release process](docs/public-release.md)
+- [v0.1.1 release notes](docs/release-notes-v0.1.1.md)
 - [v0.1.0 release notes](docs/release-notes-v0.1.0.md)
 - [Changelog](CHANGELOG.md)
 
 ## Project status
 
-`v0.1.0` is the initial production-ready release and is now publicly available. The policy, modes, profiles, configuration CLI, multi-agent adapters, evaluation cases, package checks, and guarded release process are complete.
+`v0.1.1` is the current maintenance release. It adds clean-install verification, contributor templates, five-minute onboarding, mode examples, and current Codex Mentions V2 guidance without changing the canonical ADHDMode response policy.
 
 The repository is public, the release tag is published, and the documented remote installation paths are ready for use.
 
