@@ -1,0 +1,135 @@
+name: Agent verification report
+description: Record a real ADHDMode installation, discovery, activation, and behavior test.
+title: "[Verification]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form only for a real agent launch. Automated filesystem checks do not count as a successful launch.
+        Follow `docs/agent-verification.md` and include evidence for discovery and activation.
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Claude Code
+        - OpenAI Codex
+        - Gemini CLI
+        - GitHub Copilot
+        - Cursor
+        - Generic Agent Skills consumer
+    validations:
+      required: true
+  - type: input
+    id: agent_version
+    attributes:
+      label: Agent version
+    validations:
+      required: true
+  - type: input
+    id: operating_system
+    attributes:
+      label: Operating system
+    validations:
+      required: true
+  - type: input
+    id: adhdmode_version
+    attributes:
+      label: ADHDMode version or commit
+      placeholder: v0.1.0 or full commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: installation
+    attributes:
+      label: Installation method and exact commands
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: discovery
+    attributes:
+      label: Discovery evidence
+      description: Include the command, UI location, or output proving the skill was discovered.
+    validations:
+      required: true
+  - type: input
+    id: activation
+    attributes:
+      label: Activation command or action
+      placeholder: Example: /adhd-mode:adhd-mode or $adhd-mode
+    validations:
+      required: true
+  - type: dropdown
+    id: quick_mode
+    attributes:
+      label: Quick mode result
+      options:
+        - Pass
+        - Fail
+        - Blocked
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: debug_mode
+    attributes:
+      label: Debug mode result
+      options:
+        - Pass
+        - Fail
+        - Blocked
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: execute_mode
+    attributes:
+      label: Execute mode result
+      options:
+        - Pass
+        - Fail
+        - Blocked
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: resume_mode
+    attributes:
+      label: Resume mode result
+      options:
+        - Pass
+        - Fail
+        - Blocked
+        - Not tested
+    validations:
+      required: true
+  - type: dropdown
+    id: removal
+    attributes:
+      label: Removal or uninstall result
+      options:
+        - Pass — no unwanted files remain
+        - Fail — unwanted files remain
+        - Blocked
+        - Not tested
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and observations
+      description: Include exact output, screenshots, and any difference from the documented behavior.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: This was tested in a real agent environment, not only with repository automation.
+          required: true
+        - label: I used the shared prompts from docs/agent-verification.md or documented any deviation.
+          required: true
+        - label: I removed secrets and private information from the evidence.
+          required: true
