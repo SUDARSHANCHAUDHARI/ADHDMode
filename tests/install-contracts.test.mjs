@@ -39,13 +39,18 @@ test('documented commands use current agent identifiers', () => {
   assert.doesNotMatch(readme, /Then run `\/adhd-mode`\./);
   assert.doesNotMatch(readme, /codex plugin marketplace add/);
   assert.match(readme, /\$REPO_ROOT\/\.agents\/skills\/adhd-mode\//);
+  assert.match(readme, /@adhd-mode/);
   assert.match(readme, /\$adhd-mode/);
+  assert.match(readme, /legacy-compatible fallback/);
   assert.match(readme, /gemini extensions install https:\/\/github\.com\/SUDARSHANCHAUDHARI\/ADHDMode\.git/);
   assert.match(readme, /pull requests only/);
 
   assert.match(install, /claude plugin validate \. --strict/);
   assert.doesNotMatch(install, /codex plugin marketplace add/);
   assert.match(install, /\$HOME\/\.agents\/skills\/adhd-mode\//);
+  assert.match(install, /Mentions V2 by default/);
+  assert.match(install, /@adhd-mode/);
+  assert.match(install, /\$adhd-mode/);
   assert.match(install, /gemini skills install .* --path skills\/adhd-mode --consent/);
   assert.match(install, /\.github\/skills\/adhd-mode\//);
   assert.match(install, /\.cursor\/skills\/adhd-mode\//);
