@@ -1,0 +1,45 @@
+name: Validate PR 25 merge result
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    if: github.head_ref == 'verify/pr25-merge-matrix'
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+    runs-on: ubuntu-latest
+    name: Node ${{ matrix.node-version }}
+    steps:
+      - name: Check out current PR 25 merge result
+        uses: actions/checkout@v4
+        with:
+          ref: refs/pull/25/merge
+          fetch-depth: 1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Verify quick-mode fix is present
+        run: |
+          grep -F 'Verified current state outranks stale planning artifacts' skills/adhd-mode/SKILL.md
+          grep -F 'quick-current-release-state' evals/cases.jsonl
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run complete tests
+        run: npm test
+
+      - name: Inspect package
+        run: npm run pack:check
