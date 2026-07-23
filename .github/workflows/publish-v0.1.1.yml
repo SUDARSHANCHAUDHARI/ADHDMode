@@ -1,0 +1,94 @@
+name: Publish v0.1.1
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.head_ref == 'agent/publish-v0.1.1'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out publisher branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate exact release commit
+        id: validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected_sha='168c967419213a1e67009a1cafe3f6ad770548f7'
+          git fetch origin main --tags
+          main_sha="$(git rev-parse origin/main)"
+          if [[ "$main_sha" != "$expected_sha" ]]; then
+            echo "main moved: expected $expected_sha, found $main_sha" >&2
+            exit 1
+          fi
+
+          rm -rf /tmp/adhdmode-release
+          git worktree add --detach /tmp/adhdmode-release "$main_sha"
+          cd /tmp/adhdmode-release
+
+          node -e "const p=require('./package.json'); if(p.version!=='0.1.1') throw new Error('Expected package version 0.1.1, found '+p.version)"
+          test -f docs/release-notes-v0.1.1.md
+          npm ci
+          npm test
+          npm run pack:check
+
+          echo "main_sha=$main_sha" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag and GitHub Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MAIN_SHA: ${{ steps.validate.outputs.main_sha }}
+        run: |
+          set -euo pipefail
+          tag='v0.1.1'
+          release_dir='/tmp/adhdmode-release'
+
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" >/dev/null 2>&1; then
+            git fetch origin "refs/tags/$tag:refs/tags/$tag"
+            target="$(git rev-list -n 1 "$tag")"
+            if [[ "$target" != "$MAIN_SHA" ]]; then
+              echo "$tag points to $target, expected $MAIN_SHA" >&2
+              exit 1
+            fi
+            echo "$tag already exists and points to the release commit."
+          else
+            git -C "$release_dir" config user.name 'github-actions[bot]'
+            git -C "$release_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git -C "$release_dir" tag -a "$tag" "$MAIN_SHA" -m 'ADHDMode v0.1.1'
+            git -C "$release_dir" push origin "$tag"
+          fi
+
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json tagName,url,isDraft,isPrerelease >/tmp/release.json 2>/dev/null; then
+            node - <<'NODE'
+            const fs = require('node:fs');
+            const release = JSON.parse(fs.readFileSync('/tmp/release.json', 'utf8'));
+            if (release.tagName !== 'v0.1.1' || release.isDraft || release.isPrerelease) {
+              throw new Error(`Unexpected existing release state: ${JSON.stringify(release)}`);
+            }
+            console.log(`Release already published: ${release.url}`);
+            NODE
+          else
+            gh release create "$tag" \
+              --repo "$GITHUB_REPOSITORY" \
+              --verify-tag \
+              --title 'ADHDMode v0.1.1' \
+              --notes-file "$release_dir/docs/release-notes-v0.1.1.md"
+          fi
+
+          gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json tagName,url,isDraft,isPrerelease
