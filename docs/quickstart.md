@@ -9,7 +9,7 @@ ADHDMode changes how an AI coding agent presents work. It does not replace the a
 | Agent | Install | Discover or activate |
 | --- | --- | --- |
 | Claude Code | Plugin marketplace | `/adhd-mode:adhd-mode` |
-| OpenAI Codex | Copy the canonical skill | `/skills`, then `$adhd-mode` |
+| OpenAI Codex | Copy the canonical skill | `/skills`, then `@adhd-mode` (`$adhd-mode` fallback) |
 | Gemini CLI | Extension or direct skill install | `/extensions list` and `/skills list` |
 | GitHub Copilot | Copy into a supported skill directory | Automatic discovery |
 | Cursor | Copy into a supported skill directory | Automatic discovery |
@@ -40,11 +40,13 @@ mkdir -p .agents/skills
 cp -R skills/adhd-mode .agents/skills/adhd-mode
 ```
 
-Restart Codex, confirm discovery with `/skills`, and invoke:
+Restart Codex, confirm discovery with `/skills`, and invoke using the current Mentions V2 syntax:
 
 ```text
-$adhd-mode
+@adhd-mode
 ```
+
+The legacy-compatible `$adhd-mode` form remains available in Codex.
 
 ### Gemini CLI
 
