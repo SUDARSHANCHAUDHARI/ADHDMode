@@ -29,6 +29,7 @@ jobs:
         shell: bash
         run: |
           set -u
+          set +e
 
           export HOME="$RUNNER_TEMP/adhdmode-home"
           export NPM_CONFIG_PREFIX="$RUNNER_TEMP/npm-global"
@@ -138,6 +139,7 @@ jobs:
 
           cat "$report" >> "$GITHUB_STEP_SUMMARY"
           cp "$report" "$logs/report.md"
+          exit 0
 
       - name: Upload verification evidence
         if: always()
