@@ -1,0 +1,52 @@
+name: Prepare clean quick-mode fix branch
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: github.head_ref == 'fix/quick-mode-state-awareness-v2'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out clean fix branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Copy the validated quick-mode files
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin fix/quick-mode-state-awareness
+          git checkout origin/fix/quick-mode-state-awareness -- \
+            skills/adhd-mode/SKILL.md \
+            evals/cases.jsonl \
+            tests/quick-mode-contract.test.mjs
+          rm .github/workflows/prepare-quick-mode-v2.yml
+
+      - name: Validate clean replacement
+        run: |
+          npm ci
+          npm test
+          npm run pack:check
+
+      - name: Commit clean replacement
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add skills/adhd-mode/SKILL.md evals/cases.jsonl tests/quick-mode-contract.test.mjs .github/workflows/prepare-quick-mode-v2.yml
+          git commit -m 'Make quick mode concise and state-aware'
+          git push origin HEAD:${{ github.head_ref }}
