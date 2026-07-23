@@ -22,14 +22,22 @@
 
 ## Required before a public announcement
 
-- [ ] Change the GitHub repository from private to public with owner approval.
-- [ ] Run `npm run release:check` successfully.
-- [ ] Run `npm run release:publish` to create the version tag and GitHub release.
-- [ ] Confirm remote installation from an account without prior private repository access.
+- [x] Change the GitHub repository from private to public with owner approval.
+- [x] Run `npm run release:check` successfully.
+- [x] Run `npm run release:publish` to create the version tag and GitHub release.
+- [x] Confirm remote installation from a clean environment without prior private repository access.
+
+The current public release is [`v0.1.1`](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1), published from commit `168c967419213a1e67009a1cafe3f6ad770548f7`.
 
 ## After public release
 
-- Test a real launch in Claude Code, Codex, and Gemini CLI.
-- Verify Copilot and Cursor discovery in clean project directories.
-- Collect real usage feedback before changing default behavior.
-- Add model-backed evaluation only when runners are isolated, pinned, and cost-controlled.
+- [x] Verify public marketplace or extension installation and discovery in Claude Code and Gemini CLI.
+- [x] Verify authenticated Codex `/skills` discovery and primary `@adhd-mode` activation.
+- [x] Verify GitHub Copilot CLI project-skill discovery in a clean project directory.
+- [ ] Complete authenticated quick, execute, resume, explain, decide, auto, and safety behavior checks tracked in [issue #12](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/issues/12).
+- [ ] Resolve or clarify the Codex `$adhd-mode` legacy fallback with observable skill-load evidence.
+- [ ] Verify Cursor discovery in a clean desktop project.
+- [ ] Verify one additional real third-party Agent Skills consumer.
+- [ ] Complete removal and reinstall cycles across every supported agent.
+- [ ] Collect real usage feedback before changing default behavior.
+- [ ] Add model-backed evaluation only when runners are isolated, pinned, and cost-controlled.
