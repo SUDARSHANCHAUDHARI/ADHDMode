@@ -1,0 +1,84 @@
+name: Feature request
+description: Propose a tested improvement to ADHDMode behavior, compatibility, tooling, or documentation.
+title: "[Feature]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ADHDMode changes should solve a demonstrated problem without reducing correctness, safety, or technical depth.
+        Requests based on real usage evidence are more actionable than preference-only proposals.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: Describe the concrete workflow problem and who experiences it.
+    validations:
+      required: true
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: Current behavior and evidence
+      description: Include a real example, agent, mode, and output where practical.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Explain the smallest change that would solve the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Include configuration-only or documentation-only alternatives.
+    validations:
+      required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Primary scope
+      options:
+        - Canonical response policy
+        - Mode or presentation profile
+        - Claude Code integration
+        - OpenAI Codex integration
+        - Gemini CLI integration
+        - GitHub Copilot integration
+        - Cursor integration
+        - Generic Agent Skills compatibility
+        - Configuration CLI
+        - Verification or testing
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Identify affected agents, installation contracts, existing configurations, or migration needs.
+  - type: textarea
+    id: safety
+    attributes:
+      label: Correctness and safety considerations
+      description: Explain how the change preserves instruction precedence, explicit output contracts, permission boundaries, and evidence requirements.
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Suggested verification
+      description: List deterministic tests, evaluation cases, and real-agent checks that should prove the change works.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmation
+      options:
+        - label: I searched existing issues and discussions for this request.
+          required: true
+        - label: This request is based on a concrete problem rather than only a formatting preference.
+          required: true
