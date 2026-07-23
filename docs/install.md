@@ -107,7 +107,13 @@ New-Item -ItemType Directory -Force -Path $skills | Out-Null
 Copy-Item -Recurse -Force skills/adhd-mode (Join-Path $skills "adhd-mode")
 ```
 
-Restart the Codex session, use `/skills` to confirm discovery, and invoke ADHDMode explicitly with:
+Restart the Codex session and use `/skills` to confirm discovery. Current Codex versions enable Mentions V2 by default, so invoke ADHDMode explicitly with:
+
+```text
+@adhd-mode
+```
+
+Codex still recognizes the legacy-compatible form:
 
 ```text
 $adhd-mode

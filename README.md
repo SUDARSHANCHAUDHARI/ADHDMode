@@ -35,7 +35,7 @@ Use ADHDMode debug mode.
 My Playwright checkout test fails because the Pay button cannot be found. Separate the evidence, likely cause, fix, and verification steps.
 ```
 
-Claude Code activates the installed skill with `/adhd-mode:adhd-mode`. Codex confirms discovery with `/skills` and invokes it with `$adhd-mode`. Other supported agents use the installation and discovery paths documented below.
+Claude Code activates the installed skill with `/adhd-mode:adhd-mode`. Codex confirms discovery with `/skills` and invokes it with `@adhd-mode`; `$adhd-mode` remains a legacy-compatible fallback. Other supported agents use the installation and discovery paths documented below.
 
 See [Mode examples](docs/examples.md) for `auto`, `quick`, `execute`, `debug`, `explain`, `decide`, and `resume` output patterns.
 
@@ -120,7 +120,7 @@ With ADHDMode:
 | Agent | Distribution method | Activation or discovery |
 | --- | --- | --- |
 | Claude Code | Plugin marketplace or local plugin checkout | `/adhd-mode:adhd-mode` |
-| OpenAI Codex | Standard Agent Skill directory | `/skills`, then `$adhd-mode` |
+| OpenAI Codex | Standard Agent Skill directory | `/skills`, then `@adhd-mode` (`$adhd-mode` fallback) |
 | Gemini CLI | Extension or direct skill installation | `/extensions list` and `/skills list` |
 | GitHub Copilot | Project or personal Agent Skill directory | Automatic skill discovery |
 | Cursor | Project or user skill directory | Automatic skill discovery |
@@ -150,11 +150,13 @@ $REPO_ROOT/.agents/skills/adhd-mode/
 $HOME/.agents/skills/adhd-mode/
 ```
 
-Restart the session, confirm discovery with `/skills`, and invoke the skill with:
+Restart the session, confirm discovery with `/skills`, and invoke the skill using the current Mentions V2 syntax:
 
 ```text
-$adhd-mode
+@adhd-mode
 ```
+
+Codex still recognizes `$adhd-mode` through its legacy-compatible mention parser.
 
 ADHDMode uses the standard Agent Skill path for Codex. It does not publish an unsupported repository marketplace entry or maintain a second copy of the complete policy.
 
