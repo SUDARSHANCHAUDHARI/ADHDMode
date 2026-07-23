@@ -1,0 +1,153 @@
+name: Prepare quick-mode state-awareness fix
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    if: github.head_ref == 'fix/quick-mode-state-awareness'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out fix branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply focused policy and evaluation changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          skill_path = Path('skills/adhd-mode/SKILL.md')
+          skill = skill_path.read_text()
+
+          old_quick = '''### Quick
+
+          Use for direct questions, small calculations, simple definitions, casual replies, and output-only requests.
+
+          - Give the answer immediately.
+          - Do not invent a workflow, progress report, or next step.
+          - Respect requests such as code-only, JSON-only, or revised-text-only.
+          '''
+          new_quick = '''### Quick
+
+          Use for direct questions, small calculations, simple definitions, casual replies, and output-only requests.
+
+          - Give the answer immediately.
+          - Return only the requested result, fields, and number of actions. Do not expand a three-item request into a broader review.
+          - Check verified current state before proposing an action. Do not recommend repeating work that is already completed, published, deployed, or verified.
+          - When direct current evidence conflicts with a stale plan or unchecked checklist, prefer the direct evidence and mention the conflict only when it changes the answer.
+          - Do not invent a workflow, progress report, optional next step, or generic closing invitation.
+          - Respect requests such as code-only, JSON-only, or revised-text-only.
+          '''
+          if old_quick not in skill:
+              raise SystemExit('Quick-mode policy block did not match expected source')
+          skill = skill.replace(old_quick, new_quick, 1)
+
+          old_objective = '''### Protect the current objective
+
+          Finish, verify, or explicitly pause the active issue before introducing unrelated improvements.
+
+          A relevant risk is not a tangent. State it where it affects the current action.
+          '''
+          new_objective = '''### Protect the current objective
+
+          Finish, verify, or explicitly pause the active issue before introducing unrelated improvements.
+
+          Verified current state outranks stale planning artifacts. An unchecked item is not evidence that work remains when direct repository, test, release, deployment, or tool evidence proves completion.
+
+          A relevant risk is not a tangent. State it where it affects the current action.
+          '''
+          if old_objective not in skill:
+              raise SystemExit('Current-objective policy block did not match expected source')
+          skill = skill.replace(old_objective, new_objective, 1)
+          skill_path.write_text(skill)
+
+          cases_path = Path('evals/cases.jsonl')
+          lines = cases_path.read_text().splitlines()
+          case_id = 'quick-current-release-state'
+          if not any(json.loads(line).get('id') == case_id for line in lines if line.strip()):
+              case = {
+                  'id': case_id,
+                  'category': 'progress',
+                  'mode': 'quick',
+                  'prompt': 'The repository is public and v0.1.1 is already released, but an old checklist still shows release steps unchecked. Tell me what is complete, the single most important remaining action, and how to verify it.',
+                  'must': [
+                      'Treats publication as complete using verified current state',
+                      'Returns only the requested compact fields with one remaining action',
+                  ],
+                  'must_not': [
+                      'Does not recommend rerunning release publication or add a generic closing invitation',
+                  ],
+                  'risk': 'medium',
+              }
+              lines.append(json.dumps(case, ensure_ascii=False))
+              cases_path.write_text('\n'.join(lines) + '\n')
+
+          test_path = Path('tests/quick-mode-contract.test.mjs')
+          test_path.write_text("""import assert from 'node:assert/strict';
+          import fs from 'node:fs';
+          import path from 'node:path';
+          import test from 'node:test';
+
+          const root = process.cwd();
+          const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
+
+          test('quick mode is concise and uses verified current state', () => {
+            const skill = read('skills/adhd-mode/SKILL.md');
+            const cases = read('evals/cases.jsonl')
+              .trim()
+              .split(/\\r?\\n/)
+              .map((line) => JSON.parse(line));
+
+            assert.match(skill, /Return only the requested result, fields, and number of actions/);
+            assert.match(skill, /Do not recommend repeating work that is already completed, published, deployed, or verified/);
+            assert.match(skill, /prefer the direct evidence/);
+            assert.match(skill, /optional next step, or generic closing invitation/);
+            assert.match(skill, /Verified current state outranks stale planning artifacts/);
+
+            const regression = cases.find((item) => item.id === 'quick-current-release-state');
+            assert.ok(regression);
+            assert.equal(regression.mode, 'quick');
+            assert.ok(regression.must.some((item) => item.includes('verified current state')));
+            assert.ok(regression.must_not.some((item) => item.includes('rerunning release publication')));
+          });
+          """)
+          PY
+
+      - name: Remove one-time workflow before validation
+        run: rm .github/workflows/prepare-quick-mode-fix.yml
+
+      - name: Validate focused fix
+        run: |
+          npm ci
+          npm test
+          npm run pack:check
+
+      - name: Commit prepared fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add skills/adhd-mode/SKILL.md evals/cases.jsonl tests/quick-mode-contract.test.mjs .github/workflows/prepare-quick-mode-fix.yml
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'Make quick mode concise and state-aware'
+          git push origin HEAD:${{ github.head_ref }}
