@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/SUDARSHANCHAUDHARI/ADHDMode/security/policy
+    about: Report security problems privately according to SECURITY.md.
+  - name: Installation guide
+    url: https://github.com/SUDARSHANCHAUDHARI/ADHDMode/blob/main/docs/install.md
+    about: Review supported installation paths before opening an issue.
+  - name: Agent verification guide
+    url: https://github.com/SUDARSHANCHAUDHARI/ADHDMode/blob/main/docs/agent-verification.md
+    about: Use the standard prompts and evidence format for real-agent tests.
