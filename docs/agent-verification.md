@@ -37,7 +37,7 @@ Record one result for every supported agent and operating system combination tes
 | Agent | Install or discovery action | Activation check | Status |
 | --- | --- | --- | --- |
 | Claude Code | Install repository marketplace and plugin | `/adhd-mode:adhd-mode` | Not yet recorded |
-| OpenAI Codex | Copy to `.agents/skills/adhd-mode/` and restart | `/skills`, then `$adhd-mode` | Not yet recorded |
+| OpenAI Codex | Copy to `.agents/skills/adhd-mode/` and restart | `/skills`, then `@adhd-mode`; retry `$adhd-mode` only as the legacy-compatible fallback | Not yet recorded |
 | Gemini CLI | Install extension or direct skill and restart | `/extensions list` and `/skills list` | Not yet recorded |
 | GitHub Copilot | Copy to `.github/skills/adhd-mode/` | Confirm automatic skill discovery | Not yet recorded |
 | Cursor | Copy to `.cursor/skills/adhd-mode/` | Confirm automatic skill discovery | Not yet recorded |
@@ -50,7 +50,7 @@ Use only these result values:
 - `Blocked by environment`
 - `Not yet tested`
 
-Do not mark an agent as passed based only on repository tests.
+Do not mark an agent as passed based only on repository tests or upstream source inspection.
 
 ## Standard behavior prompts
 
