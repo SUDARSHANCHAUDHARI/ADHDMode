@@ -11,7 +11,7 @@
 
 **Clear next actions. Visible progress. Easier resumption.**
 
-[Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Release](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
+[Quick start](docs/quickstart.md) · [Examples](docs/examples.md) · [Installation](#installation) · [Modes](#response-modes) · [Configuration](docs/configuration.md) · [Release](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -22,6 +22,30 @@ ADHDMode is a configurable response layer for AI coding agents. It helps assista
 It is a communication and workflow preference tool. It does **not** diagnose, treat, or prove ADHD.
 
 > **Public release:** ADHDMode `v0.1.0` is available from the [GitHub Releases page](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.0). The repository is public and the remote installation commands below are ready to use.
+
+## Start in five minutes
+
+1. Pick your agent and follow the [Quick start](docs/quickstart.md).
+2. Confirm that ADHDMode is discovered or activate it using the agent-specific command.
+3. Run a concrete first request:
+
+```text
+Use ADHDMode debug mode.
+
+My Playwright checkout test fails because the Pay button cannot be found. Separate the evidence, likely cause, fix, and verification steps.
+```
+
+Claude Code activates the installed skill with `/adhd-mode:adhd-mode`. Codex confirms discovery with `/skills` and invokes it with `$adhd-mode`. Other supported agents use the installation and discovery paths documented below.
+
+See [Mode examples](docs/examples.md) for `auto`, `quick`, `execute`, `debug`, `explain`, `decide`, and `resume` output patterns.
+
+Repository maintainers can validate all packaged installation layouts with:
+
+```bash
+npm run verify:install
+```
+
+This deterministic check does not replace a real launch inside the proprietary agent applications.
 
 ## Why ADHDMode
 
@@ -212,6 +236,7 @@ This structure prevents agent integrations from drifting into separate, inconsis
 
 ```bash
 npm ci
+npm run verify:install
 npm test
 npm run pack:check
 ```
@@ -258,7 +283,10 @@ Security issues should be reported according to [SECURITY.md](SECURITY.md).
 
 ## Documentation
 
+- [Quick start](docs/quickstart.md)
+- [Mode examples](docs/examples.md)
 - [Installation guide](docs/install.md)
+- [Agent verification guide](docs/agent-verification.md)
 - [Configuration reference](docs/configuration.md)
 - [Design and architecture](docs/design.md)
 - [Evaluation strategy](docs/evaluations.md)
