@@ -1,0 +1,149 @@
+name: Headless real-agent verification
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.head_ref == 'agent/headless-real-agent-verification'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out ADHDMode v0.1.1
+        uses: actions/checkout@v4
+        with:
+          ref: v0.1.1
+          fetch-depth: 1
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install current public agent CLIs and run credential-free checks
+        shell: bash
+        run: |
+          set -u
+
+          export HOME="$RUNNER_TEMP/adhdmode-home"
+          export NPM_CONFIG_PREFIX="$RUNNER_TEMP/npm-global"
+          export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
+          mkdir -p "$HOME" "$NPM_CONFIG_PREFIX" "$RUNNER_TEMP/agent-verification-logs"
+
+          report="$RUNNER_TEMP/agent-verification-report.md"
+          logs="$RUNNER_TEMP/agent-verification-logs"
+
+          cat > "$report" <<'REPORT'
+          # ADHDMode v0.1.1 headless real-agent verification
+
+          - Release: `v0.1.1`
+          - Release commit: `168c967419213a1e67009a1cafe3f6ad770548f7`
+          - Runner: GitHub-hosted Ubuntu
+          - Node.js: 22
+          - Authentication: intentionally unavailable
+
+          This run verifies only operations that official CLIs expose without a paid or authenticated model session. It does not convert authentication-blocked activation into a pass.
+
+          | Check | Result |
+          | --- | --- |
+          REPORT
+
+          slug() {
+            printf '%s' "$1" | tr '[:upper:] /:' '[:lower:]---' | tr -cd 'a-z0-9._-'
+          }
+
+          run_check() {
+            label="$1"
+            shift
+            log="$logs/$(slug "$label").log"
+            "$@" >"$log" 2>&1
+            status=$?
+            if [ "$status" -eq 0 ]; then
+              printf '| %s | Passed |\n' "$label" >> "$report"
+            else
+              printf '| %s | Failed or blocked (exit %s) |\n' "$label" "$status" >> "$report"
+            fi
+            return 0
+          }
+
+          run_shell_check() {
+            label="$1"
+            command="$2"
+            log="$logs/$(slug "$label").log"
+            bash -lc "$command" >"$log" 2>&1
+            status=$?
+            if [ "$status" -eq 0 ]; then
+              printf '| %s | Passed |\n' "$label" >> "$report"
+            else
+              printf '| %s | Failed or blocked (exit %s) |\n' "$label" "$status" >> "$report"
+            fi
+            return 0
+          }
+
+          # Claude Code: public marketplace, component discovery, and uninstall do not require a model session.
+          run_check "Claude Code package installation" npm install -g @anthropic-ai/claude-code@latest
+          run_check "Claude Code version" claude --version
+          run_check "Claude plugin validation" claude plugin validate . --strict
+          run_check "Claude public marketplace add" claude plugin marketplace add https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git#v0.1.1
+          run_check "Claude marketplace listing" claude plugin marketplace list --json
+          run_check "Claude ADHDMode plugin installation" claude plugin install adhd-mode@adhd-mode --scope user
+          run_check "Claude installed plugin listing" claude plugin list --json
+          run_check "Claude ADHDMode component inventory" claude plugin details adhd-mode@adhd-mode
+          run_check "Claude ADHDMode plugin removal" claude plugin uninstall adhd-mode@adhd-mode --scope user --yes
+          run_check "Claude marketplace removal" claude plugin marketplace remove adhd-mode
+
+          # Codex: installation can be verified, but /skills and model execution require an authenticated session.
+          run_check "OpenAI Codex package installation" npm install -g @openai/codex@latest
+          run_check "OpenAI Codex version" codex --version
+          mkdir -p "$RUNNER_TEMP/codex-project/.agents/skills"
+          cp -R skills/adhd-mode "$RUNNER_TEMP/codex-project/.agents/skills/adhd-mode"
+          run_check "OpenAI Codex CLI startup help" codex --help
+          run_shell_check "OpenAI Codex authenticated activation probe" "cd '$RUNNER_TEMP/codex-project' && timeout 30s codex exec --skip-git-repo-check --json '@adhd-mode Use ADHDMode quick mode. Reply only READY.'"
+
+          # Gemini CLI: extension validation, remote install, extension listing, skill listing, and uninstall are credential-free.
+          run_check "Gemini CLI package installation" npm install -g @google/gemini-cli@latest
+          run_check "Gemini CLI version" gemini --version
+          run_check "Gemini extension validation" gemini extensions validate .
+          run_check "Gemini remote extension installation" gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git --ref v0.1.1 --consent --skip-settings
+          run_check "Gemini installed extension listing" gemini extensions list
+          run_check "Gemini discovered skill listing" gemini skills list
+          run_check "Gemini ADHDMode extension removal" gemini extensions uninstall adhd-mode
+          run_check "Gemini post-removal extension listing" gemini extensions list
+
+          # GitHub Copilot CLI: the binary can be installed and started, but skill use requires Copilot authentication.
+          run_check "GitHub Copilot CLI package installation" npm install -g @github/copilot@latest
+          run_check "GitHub Copilot CLI version" copilot --version
+          mkdir -p "$RUNNER_TEMP/copilot-project/.github/skills"
+          cp -R skills/adhd-mode "$RUNNER_TEMP/copilot-project/.github/skills/adhd-mode"
+          run_check "GitHub Copilot CLI startup help" copilot help
+          run_shell_check "GitHub Copilot authenticated skill probe" "cd '$RUNNER_TEMP/copilot-project' && timeout 30s copilot -sp 'Use ADHDMode quick mode. Reply only READY.'"
+
+          cat >> "$report" <<'REPORT'
+
+          ## Environment-only blockers
+
+          - Cursor Agent: blocked because the GitHub-hosted runner has no Cursor desktop application or authenticated Cursor session.
+          - Generic Agent Skills consumer: not marked passed because an installer or custom parser is not equivalent to a real third-party agent consuming the skill.
+          - Claude/Codex/Copilot model activation: any authentication error remains `Blocked by environment`, not `Passed`.
+
+          ## Raw logs
+
+          Every table row has a corresponding log file in the uploaded artifact.
+          REPORT
+
+          cat "$report" >> "$GITHUB_STEP_SUMMARY"
+          cp "$report" "$logs/report.md"
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adhdmode-v0.1.1-headless-agent-verification
+          path: ${{ runner.temp }}/agent-verification-logs
+          if-no-files-found: error
+          retention-days: 14
