@@ -1,31 +1,10 @@
 name: Headless real-agent verification
 
 on:
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
-
-permissions:
-  contents: read
+  workflow_dispatch:
 
 jobs:
-  verify:
-    if: github.head_ref == 'agent/headless-real-agent-verification'
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
     steps:
-      - name: Check out ADHDMode v0.1.1
-        uses: actions/checkout@v4
-        with:
-          ref: v0.1.1
-          fetch-depth: 1
-
-      - name: Set up Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verification completed
-        run: |
-          echo "Evidence was collected by workflow run 29980893660."
-          echo "This disposable branch will be reset to main after issue #12 is updated."
+      - run: echo "Disposable verification completed in run 29980893660."
