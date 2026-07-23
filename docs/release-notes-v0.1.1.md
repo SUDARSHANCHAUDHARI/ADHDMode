@@ -2,6 +2,8 @@
 
 ADHDMode v0.1.1 is a maintenance release focused on installation confidence, contributor readiness, onboarding, and current agent compatibility. It does not change the canonical ADHDMode response policy.
 
+This release packages the repository improvements merged after v0.1.0. See the [complete comparison](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/compare/v0.1.0...v0.1.1).
+
 ## Highlights
 
 - Added `npm run verify:install` for deterministic clean-install validation across supported skill layouts.
