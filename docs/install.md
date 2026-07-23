@@ -2,7 +2,7 @@
 
 ADHDMode keeps one canonical policy at `skills/adhd-mode/SKILL.md`. Agent-specific manifests package or point to that policy.
 
-> **Public release:** ADHDMode `v0.1.0` is publicly available. The remote installation commands below can be used without private repository access.
+> **Public release:** ADHDMode `v0.1.1` is publicly available. The remote installation commands below can be used without private repository access.
 
 ## Claude Code
 
