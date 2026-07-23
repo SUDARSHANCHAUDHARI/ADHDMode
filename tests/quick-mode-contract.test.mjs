@@ -22,6 +22,9 @@ test('quick mode is concise and uses verified current state', () => {
   const regression = cases.find((item) => item.id === 'quick-current-release-state');
   assert.ok(regression);
   assert.equal(regression.mode, 'quick');
+  assert.match(regression.prompt, /single most important remaining action/);
   assert.ok(regression.must.some((item) => item.includes('verified current state')));
+  assert.ok(regression.must.some((item) => item.includes('one remaining action')));
   assert.ok(regression.must_not.some((item) => item.includes('rerunning release publication')));
+  assert.ok(regression.must_not.some((item) => item.includes('generic closing invitation')));
 });
