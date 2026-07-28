@@ -97,7 +97,7 @@ function tryRun(command, args) {
 }
 
 function printHelp() {
-  console.log(`ADHDMode release helper\n\nUsage:\n  npm run release:check\n  npm run release:publish\n\nModes:\n  --check    Validate release readiness without changing Git or GitHub.\n  --publish  Create and push the version tag, then publish the GitHub release.\n\nSafety:\n  The default mode is --check. Publishing stops unless the repository is public,\n  the working tree is clean, the current branch is main, GitHub CLI is authenticated,\n  all tests pass, existing tags match the current commit, and release notes exist.`);
+  console.log(`ADHDMode release helper\n\nUsage:\n  pnpm release:check\n  pnpm release:publish\n\nModes:\n  --check    Validate release readiness without changing Git or GitHub.\n  --publish  Create and push the version tag, then publish the GitHub release.\n\nSafety:\n  The default mode is --check. Publishing stops unless the repository is public,\n  the working tree is clean, the current branch is main, GitHub CLI is authenticated,\n  all tests pass, existing tags match the current commit, and release notes exist.`);
 }
 
 function readPackage() {
@@ -168,9 +168,9 @@ function inspectRepository(version) {
 }
 
 function runReleaseGates() {
-  run('npm', ['ci'], { inherit: true });
-  run('npm', ['test'], { inherit: true });
-  run('npm', ['run', 'pack:check'], { inherit: true });
+  run('pnpm', ['install', '--frozen-lockfile'], { inherit: true });
+  run('pnpm', ['test'], { inherit: true });
+  run('pnpm', ['pack:check'], { inherit: true });
 }
 
 function printSummary(state, mode) {

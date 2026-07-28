@@ -34,10 +34,10 @@
 
 ## Validation
 
-- [ ] `npm ci`
-- [ ] `npm test`
-- [ ] `npm run verify:install`
-- [ ] `npm run pack:check`
+- [ ] `pnpm install --frozen-lockfile`
+- [ ] `pnpm test`
+- [ ] `pnpm verify:install`
+- [ ] `pnpm pack:check`
 - [ ] Relevant real-agent verification completed or explicitly documented as unavailable
 
 ## Safety and scope

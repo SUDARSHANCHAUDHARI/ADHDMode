@@ -12,14 +12,15 @@ const repositoryUrl = 'https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git';
 
 test('distribution manifests use the current package version and install contracts', () => {
   const pkg = readJson('package.json');
-  const lock = readJson('package-lock.json');
+  const lock = read('pnpm-lock.yaml');
   const marketplace = readJson('.claude-plugin/marketplace.json');
   const claudePlugin = readJson('.claude-plugin/plugin.json');
   const codexPlugin = readJson('.codex-plugin/plugin.json');
   const geminiExtension = readJson('gemini-extension.json');
 
-  assert.equal(lock.version, pkg.version);
-  assert.equal(lock.packages[''].version, pkg.version);
+  assert.match(lock, /^lockfileVersion: '9\.0'$/m);
+  assert.match(lock, /^importers:$/m);
+  assert.equal(pkg.packageManager, 'pnpm@10.34.0');
   assert.equal(marketplace.$schema, 'https://json.schemastore.org/claude-code-marketplace.json');
   assert.equal(marketplace.version, pkg.version);
   assert.equal(marketplace.plugins[0].version, pkg.version);

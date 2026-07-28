@@ -7,8 +7,8 @@ This guide separates deterministic repository checks from real launch tests insi
 Run from the repository root:
 
 ```bash
-npm ci
-npm run verify:install
+pnpm install --frozen-lockfile
+pnpm verify:install
 ```
 
 The verifier:

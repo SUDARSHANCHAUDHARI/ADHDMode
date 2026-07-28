@@ -185,8 +185,8 @@ Copy `skills/adhd-mode/` into the tool's Agent Skills directory. For tools that 
 From the repository root:
 
 ```bash
-npm ci
-npm run verify:install
+pnpm install --frozen-lockfile
+pnpm verify:install
 ```
 
 The verifier validates the agent manifests, copies the canonical skill into clean temporary Codex, Gemini CLI, GitHub Copilot, and Cursor project layouts, and confirms every copied file exactly matches the source. It removes all temporary directories after the check.
@@ -204,10 +204,10 @@ This verifies installation contracts and filesystem layouts. It does not replace
 From the repository root:
 
 ```bash
-npm ci
-npm test
-npm run verify:install
-npm run pack:check
+pnpm install --frozen-lockfile
+pnpm test
+pnpm verify:install
+pnpm pack:check
 node bin/adhd-mode.mjs doctor
 ```
 
