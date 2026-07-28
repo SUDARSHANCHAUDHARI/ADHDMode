@@ -21,7 +21,7 @@ if (args.has('--help')) {
   console.log(`ADHDMode clean-install verifier
 
 Usage:
-  npm run verify:install
+  pnpm verify:install
   node scripts/verify-install.mjs --json
 
 The command validates the agent manifests and copies the canonical skill into

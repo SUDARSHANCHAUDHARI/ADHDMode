@@ -14,7 +14,7 @@ ADHDMode uses a local release helper instead of release automation. Publishing r
 ## 1. Check readiness
 
 ```bash
-npm run release:check
+pnpm release:check
 ```
 
 The check is non-mutating. It verifies:
@@ -33,7 +33,7 @@ A failed prerequisite stops the process and prints the blocker.
 ## 2. Publish
 
 ```bash
-npm run release:publish
+pnpm release:publish
 ```
 
 Publishing reruns every readiness check before making changes. It then:

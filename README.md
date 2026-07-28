@@ -42,7 +42,7 @@ See [Mode examples](docs/examples.md) for `auto`, `quick`, `execute`, `debug`, `
 Repository maintainers can validate all packaged installation layouts with:
 
 ```bash
-npm run verify:install
+pnpm verify:install
 ```
 
 This deterministic check does not replace a real launch inside the proprietary agent applications.
@@ -78,7 +78,7 @@ With ADHDMode:
 >
 > 1. Add `await expect(page.getByTestId('loading')).toBeHidden()`.
 > 2. Click the Pay button.
-> 3. Run `npx playwright test checkout.spec.ts`.
+> 3. Run `pnpm dlx playwright test checkout.spec.ts`.
 >
 > **Verified when:** the test passes three consecutive runs.
 
@@ -237,10 +237,10 @@ This structure prevents agent integrations from drifting into separate, inconsis
 ## Development and validation
 
 ```bash
-npm ci
-npm run verify:install
-npm test
-npm run pack:check
+pnpm install --frozen-lockfile
+pnpm verify:install
+pnpm test
+pnpm pack:check
 ```
 
 The test suite validates:
@@ -262,8 +262,8 @@ A single GitHub Actions workflow runs the same deterministic checks on **pull re
 Release publishing is a local, explicit maintainer action. It is not automated by GitHub Actions.
 
 ```bash
-npm run release:check
-npm run release:publish
+pnpm release:check
+pnpm release:publish
 ```
 
 `release:check` makes no changes. `release:publish` reruns every release gate before creating the version tag and GitHub release. It refuses to publish from a private repository, dirty working tree, non-`main` branch, mismatched tag, missing release notes, unauthenticated GitHub CLI, or failed test suite.

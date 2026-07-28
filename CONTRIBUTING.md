@@ -22,13 +22,13 @@ Automated repository checks do not count as a successful real-agent launch. Foll
 Node.js 20 or newer is required.
 
 ```bash
-npm ci
-npm test
-npm run verify:install
-npm run pack:check
+pnpm install --frozen-lockfile
+pnpm test
+pnpm verify:install
+pnpm pack:check
 ```
 
-`npm run verify:install` validates manifests and clean temporary installation layouts. It does not launch proprietary agent applications.
+`pnpm verify:install` validates manifests and clean temporary installation layouts. It does not launch proprietary agent applications.
 
 ## Change rules
 

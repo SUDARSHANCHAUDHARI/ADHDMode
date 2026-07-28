@@ -2,9 +2,9 @@
 
 ## Required before merge
 
-- [x] `npm ci` succeeds on Node.js 20 and 22.
-- [x] `npm test` passes on Node.js 20 and 22.
-- [x] `npm run pack:check` passes on Node.js 20 and 22.
+- [x] `pnpm install --frozen-lockfile` succeeds on Node.js 20 and 22.
+- [x] `pnpm test` passes on Node.js 20 and 22.
+- [x] `pnpm pack:check` passes on Node.js 20 and 22.
 - [x] Claude hook is quiet when disabled and loads the skill when enabled.
 - [x] CLI init, validation, mode, profile, status, enable, and disable tests pass.
 - [x] Manifest versions match `package.json`.
@@ -23,8 +23,8 @@
 ## Required before a public announcement
 
 - [x] Change the GitHub repository from private to public with owner approval.
-- [x] Run `npm run release:check` successfully.
-- [x] Run `npm run release:publish` to create the version tag and GitHub release.
+- [x] Run `pnpm release:check` successfully.
+- [x] Run `pnpm release:publish` to create the version tag and GitHub release.
 - [x] Confirm remote installation from a clean environment without prior private repository access.
 
 The current public release is [`v0.1.1`](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1), published from commit `168c967419213a1e67009a1cafe3f6ad770548f7`.

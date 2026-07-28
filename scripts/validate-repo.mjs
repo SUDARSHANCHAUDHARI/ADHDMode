@@ -165,8 +165,8 @@ for (const [file, text, phrases] of [
     '$adhd-mode',
     'gemini extensions install https://github.com/SUDARSHANCHAUDHARI/ADHDMode.git',
     'pull requests only',
-    'npm run release:check',
-    'npm run release:publish',
+    'pnpm release:check',
+    'pnpm release:publish',
     'docs/public-release.md',
   ]],
   ['docs/install.md', install, [
@@ -179,8 +179,8 @@ for (const [file, text, phrases] of [
     '.cursor/skills/adhd-mode/',
   ]],
   ['docs/public-release.md', publicRelease, [
-    'npm run release:check',
-    'npm run release:publish',
+    'pnpm release:check',
+    'pnpm release:publish',
     'The helper never changes repository visibility.',
     'There is no `--force` option.',
     'No GitHub Actions release workflow is used.',

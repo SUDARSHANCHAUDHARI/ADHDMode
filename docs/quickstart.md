@@ -145,13 +145,13 @@ See [Configuration](configuration.md) for every supported option.
 From a clean clone:
 
 ```bash
-npm ci
-npm run verify:install
-npm test
-npm run pack:check
+pnpm install --frozen-lockfile
+pnpm verify:install
+pnpm test
+pnpm pack:check
 ```
 
-`npm run verify:install` checks manifests and clean temporary installation layouts. It does not launch proprietary agent applications and therefore does not count as real-agent verification.
+`pnpm verify:install` checks manifests and clean temporary installation layouts. It does not launch proprietary agent applications and therefore does not count as real-agent verification.
 
 For real launch evidence, use [Agent verification](agent-verification.md).
 

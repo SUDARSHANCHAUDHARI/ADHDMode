@@ -15,7 +15,7 @@ test('README exposes quick-start and examples navigation', () => {
   assert.match(readme, /\[Quick start\]\(docs\/quickstart\.md\)/);
   assert.match(readme, /\[Examples\]\(docs\/examples\.md\)/);
   assert.match(readme, /## Start in five minutes/);
-  assert.match(readme, /npm run verify:install/);
+  assert.match(readme, /pnpm verify:install/);
 });
 
 test('quick start covers supported agents and exact activation contracts', () => {
@@ -37,7 +37,7 @@ test('quick start covers supported agents and exact activation contracts', () =>
     '/extensions list',
     '.github/skills/adhd-mode',
     '.cursor/skills/adhd-mode',
-    'npm run verify:install',
+    'pnpm verify:install',
   ]) {
     assert.match(quickstart, new RegExp(contract.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }

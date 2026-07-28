@@ -13,8 +13,8 @@ test('public release checklist matches the current published version', () => {
 
   for (const completedItem of [
     'Change the GitHub repository from private to public with owner approval.',
-    'Run `npm run release:check` successfully.',
-    'Run `npm run release:publish` to create the version tag and GitHub release.',
+    'Run `pnpm release:check` successfully.',
+    'Run `pnpm release:publish` to create the version tag and GitHub release.',
     'Confirm remote installation from a clean environment without prior private repository access.',
   ]) {
     assert.match(checklist, new RegExp(`- \\[x\\] ${completedItem.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&')}`));
@@ -24,5 +24,5 @@ test('public release checklist matches the current published version', () => {
   assert.match(checklist, /issue #12/);
   assert.match(checklist, /Complete authenticated quick, execute, resume, explain, decide, auto, and safety behavior checks/);
   assert.doesNotMatch(checklist, /- \[ \] Change the GitHub repository from private to public/);
-  assert.doesNotMatch(checklist, /- \[ \] Run `npm run release:publish`/);
+  assert.doesNotMatch(checklist, /- \[ \] Run `pnpm release:publish`/);
 });

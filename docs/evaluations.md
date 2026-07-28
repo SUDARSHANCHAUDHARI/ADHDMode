@@ -4,7 +4,7 @@ ADHDMode separates deterministic release checks from optional model-backed evalu
 
 ## Deterministic checks
 
-`npm test` verifies:
+`pnpm test` verifies:
 
 - repository structure and manifest consistency
 - canonical policy boundaries
