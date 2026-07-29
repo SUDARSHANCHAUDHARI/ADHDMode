@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2
+
+- Made quick mode concise and state-aware for release-readiness and current-state tasks.
+- Prevented already-completed publication, deployment, or verification work from being recommended again.
+- Added a regression evaluation and deterministic contract for stale planning-state conflicts.
+- Corrected the published v0.1.1 checklist to match verified GitHub state.
+- Documented `@adhd-mode` as the verified Codex activation path and `$adhd-mode` as unverified legacy syntax.
+- Preserved explicit disclosure that remaining authenticated cross-agent behavior checks are incomplete.
+
 ## 0.1.1
 
 - Added a deterministic clean-install verifier with human-readable and JSON output.

@@ -27,7 +27,7 @@
 - [x] Run `pnpm release:publish` to create the version tag and GitHub release.
 - [x] Confirm remote installation from a clean environment without prior private repository access.
 
-The current public release is [`v0.1.1`](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.1), published from commit `168c967419213a1e67009a1cafe3f6ad770548f7`.
+The current public release is [`v0.1.2`](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.2).
 
 ## After public release
 
