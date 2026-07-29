@@ -1,0 +1,80 @@
+name: Publish ADHDMode v0.1.2
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  publish:
+    if: github.head_ref == 'release/publish-v0.1.2'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_TAG: v0.1.2
+      EXPECTED_COMMIT: 80cfedcb419e1bc0e83745482e6038e307839e21
+    steps:
+      - name: Check out exact release commit
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Verify release identity
+        shell: bash
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_COMMIT"
+          test "$(node -p "require('./package.json').version")" = "0.1.2"
+          test -f docs/release-notes-v0.1.2.md
+          test "$(git status --porcelain)" = ""
+
+      - name: Run release gates
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm test
+          pnpm pack:check
+
+      - name: Create and push tag
+        shell: bash
+        run: |
+          git fetch origin --tags
+          if git rev-parse -q --verify "refs/tags/$RELEASE_TAG" >/dev/null; then
+            test "$(git rev-list -n 1 "$RELEASE_TAG")" = "$EXPECTED_COMMIT"
+            echo "$RELEASE_TAG already targets the expected commit."
+          else
+            git config user.name "Sudarshan Kishor Chaudhari"
+            git config user.email "25879455+SUDARSHANCHAUDHARI@users.noreply.github.com"
+            git tag -a "$RELEASE_TAG" "$EXPECTED_COMMIT" -m "ADHDMode v0.1.2"
+            git push origin "$RELEASE_TAG"
+          fi
+
+      - name: Publish GitHub release
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "$RELEASE_TAG GitHub release already exists."
+          else
+            gh release create "$RELEASE_TAG" \
+              --verify-tag \
+              --title "ADHDMode v0.1.2" \
+              --notes-file docs/release-notes-v0.1.2.md
+          fi
+          gh release view "$RELEASE_TAG" --json tagName,name,isDraft,isPrerelease,url,targetCommitish
+
+      - name: Record publication in issue 12
+        shell: bash
+        run: |
+          gh issue comment 12 --body "ADHDMode v0.1.2 was published from commit \`$EXPECTED_COMMIT\`. Deterministic repository, evaluation, unit, installation, and package gates passed before publication. The release notes explicitly preserve the remaining authenticated cross-agent verification limitations."
