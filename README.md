@@ -23,6 +23,29 @@ It is a communication and workflow preference tool. It does **not** diagnose, tr
 
 > **Public release:** ADHDMode `v0.1.2` is available from the [GitHub Releases page](https://github.com/SUDARSHANCHAUDHARI/ADHDMode/releases/tag/v0.1.2). The repository is public and the remote installation commands below are ready to use.
 
+## Table of Contents
+
+- [Start in five minutes](#start-in-five-minutes)
+- [Overview](#overview)
+- [Example](#example)
+- [Key features](#key-features)
+- [Response modes](#response-modes)
+- [Presentation profiles](#presentation-profiles)
+- [Supported agents](#supported-agents)
+- [Installation](#installation)
+- [Local CLI](#local-cli)
+- [Configuration](#configuration)
+- [How it works](#how-it-works)
+- [Development and validation](#development-and-validation)
+- [Publishing a release](#publishing-a-release)
+- [Safety and scope](#safety-and-scope)
+- [Documentation](#documentation)
+- [Project status](#project-status)
+- [Contributing](#contributing)
+- [License](#license)
+- [Inspiration and attribution](#inspiration-and-attribution)
+- [About](#about)
+
 ## Start in five minutes
 
 1. Pick your agent and follow the [Quick start](docs/quickstart.md).
